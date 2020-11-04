@@ -1,4 +1,4 @@
-package com.skidchenko.dz2;
+package task2;
 
 import java.util.Scanner;
 
@@ -17,7 +17,7 @@ public class Controller {
         boolean isNumberGuessed = false;
         boolean isNumberGreater;
 
-        view.printGreetingMessage(Model.RANGE_BOTTOM,Model.RANGE_TOP);
+        view.printGreetingMessage(Model.RANGE_BOTTOM, Model.RANGE_TOP);
         while (!isNumberGuessed) {
             if (sc.hasNextInt()) {
                 enteredNumber = sc.nextInt();
@@ -31,6 +31,9 @@ public class Controller {
                     } else {
                         ifNumberSmaller(enteredNumber);
                     }
+                } else {
+                    view.printMessage(View.NUMBER_OUT_OF_RANGE);
+                    view.printCurrentRange(Model.RANGE_BOTTOM, Model.RANGE_TOP);
                 }
             } else {
                 view.printMessage(View.WRONG_INPUT_TYPE);

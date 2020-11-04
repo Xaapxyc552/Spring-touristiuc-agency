@@ -1,4 +1,4 @@
-package com.skidchenko.dz1;
+package task1;
 
 import java.util.Scanner;
 

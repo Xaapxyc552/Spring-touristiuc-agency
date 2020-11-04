@@ -1,16 +1,14 @@
-package com.skidchenko.dz2;
+package task2;
 
 import java.util.List;
 
 public class View {
 
-    public static final String OPENS_SQUARE_BRACKET = "[";
-    public static final String CLOSING_SQUARE_BRACKET = "]";
-    public static final String SPACE_SIGN = " ";
     public static final String WORD_GREATER = "greater";
     public static final String WORD_SMALLER = "smaller";
     public static final String WRONG_INPUT_TYPE = "Wrong input type! You shall use only integers!\n";
     public static final String GREETING_MESSAGE = "Hello! Try to guess number in range: [%d - %d]\n";
+    public static final String NUMBER_OUT_OF_RANGE = "Entered number is out of range!";
     public static final String FINAL_STATISTICS = "You won! Guessed number is %d\n" +
             "Checked numbers: %s\n" +
             "Count of attempts: %d";

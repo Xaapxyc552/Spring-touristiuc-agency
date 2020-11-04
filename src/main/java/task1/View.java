@@ -1,4 +1,4 @@
-package com.skidchenko.dz1;
+package task1;
 
 public class View {
     public static final String ASK_FOR_HELLO_WORD = "Please write word \"Hello\"";

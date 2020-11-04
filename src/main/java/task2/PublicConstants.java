@@ -1,4 +1,4 @@
-package com.skidchenko.dz2;
+package task2;
 
 public interface PublicConstants {
     int RANGE_BOTTOM = 0;
