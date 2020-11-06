@@ -7,18 +7,18 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
+
+
 public class Controller {
     private final View view;
     private final Model model;
     private final ResourceBundle regExBundle;
-    private final String nickNameRegexp;
 
     public Controller(View view, Model model) {
         this.model = model;
         this.view = view;
         this.regExBundle = ResourceBundle.getBundle(
                 "regexp", Locale.forLanguageTag("ru"));     //"ru" or "en"
-        nickNameRegexp = regExBundle.getString("nickname.regexp");
     }
 
     public void processUser() {
@@ -31,8 +31,8 @@ public class Controller {
                 regExBundle.getString("firstname.regexp"));
         firstName = checkInputWithRegex(sc, regExBundle.getString("firstname.regexp"), view);
 
-        view.printMessage("enter.nickname", nickNameRegexp);
-        nickName = checkInputWithRegex(sc, nickNameRegexp, view);
+        view.printMessage("enter.nickname", regExBundle.getString("nickname.regexp"));
+        nickName = checkInputWithRegex(sc, regExBundle.getString("nickname.regexp"), view);
 
         view.printMessage("enter.phone.number",
                 regExBundle.getString("phone.number.regexp"));
