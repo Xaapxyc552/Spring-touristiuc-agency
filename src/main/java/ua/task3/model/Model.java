@@ -8,13 +8,13 @@ public class Model {
     private final Notebook notebook;
 
     public Model() {
-         notebook = new Notebook(20);
+        notebook = new Notebook(20);
     }
 
     public void addNewNoteInNotebook(String firstName,
                                      String nickName,
                                      String phoneNumber) {
-        Note note = new Note(firstName,nickName,phoneNumber);
+        Note note = new Note(firstName, nickName, phoneNumber);
         notebook.addNoteToList(note);
 
     }

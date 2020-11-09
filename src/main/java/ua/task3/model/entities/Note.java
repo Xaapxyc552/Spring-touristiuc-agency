@@ -1,5 +1,12 @@
 package ua.task3.model.entities;
 
+
+/**
+ * Class that represents a data about customer, particularly {@link Note#firstName},
+ * {@link Note#nickName}, {@link Note#phoneNumber}.
+ * Has an overridden {@link Object#toString()} method,
+ * to represent contained data more receptively.
+ */
 public class Note {
 
     private String firstName;
