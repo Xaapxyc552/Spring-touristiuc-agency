@@ -1,26 +1,31 @@
 package ua.task3.model;
 
 import ua.task3.model.entities.Note;
-import ua.task3.model.entities.Notebook;
+import ua.task3.storage.Database;
+
+import java.sql.SQLException;
 
 public class Model {
 
-    private final Notebook notebook;
+    private Database database = Database.getInstance();
 
     public Model() {
-        notebook = new Notebook(20);
     }
 
-    public void addNewNoteInNotebook(String firstName,
-                                     String nickName,
-                                     String phoneNumber) {
+    public void addNewNoteInDb(String firstName,
+                               String nickName,
+                               String phoneNumber) throws NotUniqueLoginException {
         Note note = new Note(firstName, nickName, phoneNumber);
-        notebook.addNoteToList(note);
+        try {
+            database.addNoteToDb(note);
+        } catch (SQLException e) {
+            throw new NotUniqueLoginException(e);
+        }
 
     }
 
     public String notebookToString() {
-        return notebook.toString();
+        return database.getNoteSet().toString();
     }
 
 
