@@ -25,3 +25,5 @@
 hs_err_pid*
 
 /.idea/
+TASKS.iml
+/User-form-with-locale.iml

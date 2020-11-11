@@ -41,7 +41,7 @@ public class Controller {
      * Processes data, received from user using
      * {@link Controller#checkInputWithRegex(Scanner, String, View)},
      * creates new {@link ua.task3.model.entities.Note} adds newly created note to
-     * {@link Model#notebook} and prints all existing notes
+     * model and prints all existing notes
      * using {@link View#printString(String)}.
      */
     public void processUser() {
