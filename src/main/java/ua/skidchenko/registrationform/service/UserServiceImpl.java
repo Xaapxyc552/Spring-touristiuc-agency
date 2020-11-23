@@ -1,6 +1,5 @@
 package ua.skidchenko.registrationform.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.skidchenko.registrationform.dto.UserDTO;
 import ua.skidchenko.registrationform.model.User;
