@@ -1,4 +1,4 @@
-<form action="/new-user-create" method="post">
+<form action="/new-user" method="post">
     <h1>Enter your data:</h1>
     <table>
         <tr>

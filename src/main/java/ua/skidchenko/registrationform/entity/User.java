@@ -1,11 +1,11 @@
-package ua.skidchenko.registrationform.model;
+package ua.skidchenko.registrationform.entity;
 
 
 import lombok.*;
 
 import javax.persistence.*;
 
-@Getter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,17 +20,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter
     @Column(name = "email", nullable = false, unique = true, length = 30)
     private String email;
 
-    @Setter
     @Column(name = "firstname", length = 20)
     private String firstname;
 
-    @Setter
     @Column(name = "password",nullable = false, length = 20)
     private String password;
+
+    @Column(name = "login", nullable = false,length = 30)
+    private String login;
 
     protected void setId(Long id) {
         this.id = id;
