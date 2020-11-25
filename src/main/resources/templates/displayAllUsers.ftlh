@@ -3,8 +3,8 @@
 <table>
     <#list usersToDisplay as user>
         <tr>
-            <td>${user.firstname}</td>
-            <td>${user.email}</td>
+            <td>${user.username}</td>
+            <td>${user.password}</td>
         </tr>
     </#list>
 </table>

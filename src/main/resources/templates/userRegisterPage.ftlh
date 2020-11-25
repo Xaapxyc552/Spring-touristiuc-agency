@@ -1,4 +1,4 @@
-<form action="/new-user" method="post">
+<form action="/users/new" method="post">
     <h1>Enter your data:</h1>
     <table>
         <tr>
@@ -6,7 +6,7 @@
             </td>
         </tr>
         <tr>
-            <td><label for="login">Login</label><input type="text" id="login" name="login">
+            <td><label for="username">Username</label><input type="text" id="username" name="username">
             </td>
         </tr>
         <tr>

@@ -1,6 +1,10 @@
 package ua.skidchenko.registrationform.controller;
 
 import lombok.extern.log4j.Log4j2;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,32 +21,39 @@ import java.util.stream.Collectors;
 
 @Log4j2
 @Controller
-@RequestMapping("/")
+@RequestMapping("/users")
 public class UserController {
+
+    final
+    UserDetailsService userDetailsService;
 
     final
     UserService userService;
 
-    public UserController(UserService userService) {
+    public UserController(@Qualifier("userDetailsService") UserDetailsService userDetailsService,
+                          UserService userService) {
+        this.userDetailsService = userDetailsService;
         this.userService = userService;
     }
 
     //прописать тайминги логированием
 
-    @GetMapping("/main")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("")
     public String mainPage() {
         log.info("Main page was visited.");
         return "mainPage";
     }
 
-    @GetMapping("/new-user")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/new")
     public String newUserPage() {
         log.info("User register page was visited.");
         return "userRegisterPage";
     }
 
-    @ResponseStatus()
-    @PostMapping("/new-user")
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/new")
     public String createNewUser(@Valid UserDTO userDTO,
                                 BindingResult bindingResult) {
         //проверить варианты
@@ -60,6 +71,7 @@ public class UserController {
 
     //получить данные по юзеру (новй метод)
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/all-users")
     public String displayAllUsers(Model model) {
         List<User> usersToDisplay = userService.readAllUsersFromDB();
@@ -76,7 +88,7 @@ public class UserController {
     }
 
 
-    @org.jetbrains.annotations.NotNull
+    @NotNull
     private List<String> getValidationErrors(BindingResult bindingResult) {
         return bindingResult.
                 getAllErrors().

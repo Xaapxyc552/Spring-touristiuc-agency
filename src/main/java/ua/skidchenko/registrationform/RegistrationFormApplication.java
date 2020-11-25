@@ -14,4 +14,5 @@ public class RegistrationFormApplication {
         SpringApplication.run(RegistrationFormApplication.class, args);
     }
 
+
 }
