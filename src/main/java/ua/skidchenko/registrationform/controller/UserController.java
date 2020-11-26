@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 
 @Log4j2
 @Controller
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
 
     final
@@ -54,20 +55,19 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/new")
-    public String createNewUser(@Valid UserDTO userDTO,
-                                BindingResult bindingResult) {
+    public ResponseEntity<String> createNewUser(@Valid UserDTO userDTO,
+                                        BindingResult bindingResult) {
         //проверить варианты
         if (bindingResult.hasErrors()) {
             log.warn("Exception during validation of UserDTO" + userDTO.toString());
-            throw new WrongFormInputDataException("Entered incorrect data.", getValidationErrors(bindingResult));
+            throw new WrongFormInputDataException("Entered incorrect data.",
+                    getValidationErrors(bindingResult));
         }
         log.info("Saving into DB new user. User data: " + userDTO.toString());
         userService.saveUser(userDTO);
-        return "userSuccessfullyRegistered";
-        //отправлять 200-й код вместо вью (посмотреть у тренера)
-    }
-    //response entity используется для отправки сообщений о результатах работы на браузер клиента
+        return new ResponseEntity<>("User successfully registered!",HttpStatus.OK);
 
+    }
 
     //получить данные по юзеру (новй метод)
 
@@ -80,6 +80,7 @@ public class UserController {
         return "displayAllUsers";
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(WrongFormInputDataException.class)
     public String handleException(WrongFormInputDataException exception, Model model) {
         log.info("Starting handling exception: " + exception.getErrors());

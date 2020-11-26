@@ -10,10 +10,10 @@ import java.security.Principal;
 
 @Log4j2
 @Controller
-@RequestMapping("/admin-pages")
+@RequestMapping("/admin")
 public class AdminController {
 
-    @GetMapping("/admin-data")
+    @GetMapping("/data")
     public String getAdminData(Principal principal,
                                Model model) {
         log.info("Admin page visited" +principal.getName());
