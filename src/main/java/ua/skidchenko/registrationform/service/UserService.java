@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface UserService {
     User saveUser(UserDTO userDTO);
+    User getUserByUsername(String username);
     List<User> readAllUsersFromDB();
 }

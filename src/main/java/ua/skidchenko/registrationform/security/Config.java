@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import org.springframework.ui.freemarker.FreeMarkerConfigurationFactory;
 import ua.skidchenko.registrationform.service.UserService;
 
 
@@ -31,10 +32,10 @@ public class Config extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/new-user","/new-user-create").permitAll()
-//                .antMatchers("/admin-pages/admin-data","/new-user","/new-user-create").hasRole("ADMIN")
-//                .anyRequest().authenticated()
-                .and().formLogin().permitAll()
+                .antMatchers("/user").hasAnyRole("ADMIN","MANAGER","USER")
+                .antMatchers("/**").permitAll()
+                .anyRequest().authenticated()
+                .and().formLogin().permitAll().defaultSuccessUrl("/main",true)
                 .and()
                 .logout().permitAll();
     }
@@ -51,6 +52,5 @@ public class Config extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
 }

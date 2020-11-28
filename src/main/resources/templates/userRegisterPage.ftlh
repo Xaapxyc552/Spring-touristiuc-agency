@@ -1,10 +1,10 @@
 <#import "spring.ftl" as spring/>
-<#import "macroses/localeChangeMacro.ftlh" as localeChangeMacro>
+<#import "macroses/commonHeaderMacro.ftlh" as localeChangeMacro>
 
 
 <@spring.message "message.user.registration.page.header"/>
 <@spring.message "form.header"/>
-<@localeChangeMacro.changeLanguageMacro/>
+<@localeChangeMacro.headerMacro/>
 
 <form action="/user/new" method="post">
     <h1>Enter your data:</h1>

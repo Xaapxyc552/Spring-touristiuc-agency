@@ -2,9 +2,7 @@ package ua.skidchenko.registrationform.controller;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 @Log4j2
 public class LocaleController {
 
-    @PostMapping("/")
+    @GetMapping("/")
     public String changeLanguage(@CookieValue("lang") String langCode,
                                  HttpServletRequest request){
         log.info("Language changed to: " + langCode);

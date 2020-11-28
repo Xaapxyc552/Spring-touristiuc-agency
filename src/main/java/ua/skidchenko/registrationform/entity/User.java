@@ -4,6 +4,7 @@ package ua.skidchenko.registrationform.entity;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ua.skidchenko.registrationform.entity.enums.Role;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -32,9 +33,9 @@ public class User implements UserDetails {
     private String password;
 
     @Enumerated(value = EnumType.STRING)
-    Role role;
+    private Role role;
 
-    @Column(name = "email", unique = true, length = 30)
+    @Column(name = "email", unique = true, length = 60)
     private String email;
 
     @Column(name = "firstname", length = 20)
@@ -52,9 +53,13 @@ public class User implements UserDetails {
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
+    @Column(name = "money", nullable = false)
+    private Long money;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return new ArrayList<>(Collections.singleton(role));
     }
+
 }
 
