@@ -13,7 +13,7 @@
                 <tr>
                     <td> <#if (userRole == "ROLE_ANONYMOUS")>
                             <a href="/login"><@spring.message "common.head.login"/></a>
-                            <a href="/user/new"><@spring.message "common.head.sign_in"/></a>
+                            <a href="/main/new"><@spring.message "common.head.sign_in"/></a>
                         <#else>
                             <@spring.message "common.you_login_as"/> ${username}
                             <a href="/user/personal-account"><@spring.message "common.personal_account"/></a>

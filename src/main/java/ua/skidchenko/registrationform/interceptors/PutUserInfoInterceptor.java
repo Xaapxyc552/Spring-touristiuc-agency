@@ -21,13 +21,11 @@ public class PutUserInfoInterceptor implements HandlerInterceptor {
                 .getAuthorities()
                 .stream()
                 .findFirst();
-        log.info(userRole);
-        log.info(authentication.toString());
         String username = authentication.getName();
         if (aModelAndView != null && userRole.isPresent()) {
             aModelAndView.getModelMap().addAttribute("userRole",userRole.get());
             aModelAndView.getModelMap().addAttribute("username",username);
-            log.info("Attached to the model: User role" + userRole.get() + ", Username" + username + ".");
+            log.info("Attached to the model: User role " + userRole.get() + ", Username " + username + ".");
         }
     }
 

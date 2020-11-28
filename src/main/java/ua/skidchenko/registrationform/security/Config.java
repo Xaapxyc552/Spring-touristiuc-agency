@@ -32,7 +32,7 @@ public class Config extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/user","/tours/book/**").hasAnyRole("ADMIN","MANAGER","USER")
-                .antMatchers("/**").permitAll()
+                .antMatchers("/**","/main/").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().permitAll().defaultSuccessUrl("/main",true)
                 .and()

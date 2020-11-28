@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.skidchenko.registrationform.entity.Tour;
+import ua.skidchenko.registrationform.exceptions.NotPresentInDatabaseException;
+import ua.skidchenko.registrationform.service.BookingService;
 import ua.skidchenko.registrationform.service.TourService;
 
 import java.security.Principal;
@@ -22,8 +24,12 @@ public class TourController {
     final
     TourService tourService;
 
-    public TourController(TourService tourService) {
+    final
+    BookingService bookingService;
+
+    public TourController(TourService tourService, BookingService bookingService) {
         this.tourService = tourService;
+        this.bookingService = bookingService;
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -32,33 +38,40 @@ public class TourController {
                            @RequestParam(name = "order", required = false) OrderOfTours order,
                            @RequestParam(name = "direction", required = false) String direction,
                            @PathVariable(name = "page") int page) {
-        List<Tour> orderedTours;
-        int totalPages;
-
         page = (page == 0) ? 1 : page;
         Page<Tour> orderedToursPage = tourService.getPagedWaitingToursOrderedByArgs(
                 order, direction, page - 1
         );
-        totalPages = orderedToursPage.getTotalPages();
-        orderedTours = orderedToursPage.getContent();
 //        model.addAttribute("currentOrder", order.name());
 //        model.addAttribute("currentDirection", direction);
         List<Integer> pagesSequence = IntStream
-                .rangeClosed(1, totalPages)
+                .rangeClosed(1,  orderedToursPage.getTotalPages())
                 .boxed()
                 .collect(Collectors.toList());
-        model.addAttribute("tours", orderedTours);
+        model.addAttribute("tours", orderedToursPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("pagesSequence", pagesSequence);
         return "tours";
     }
 
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/book/{tourName}")
+    @GetMapping("/book/{tourId}")
     public String bookTour(Model model,
-                           @PathVariable(name = "tourName") String tourName,
+                           @PathVariable(name = "tourId") Long tourId,
                            Principal principal) {
+        String username = principal.getName();
+        log.info("Starting booking tour to user. " +
+                "Username: " + username + " Tour ID: " + tourId);
+        bookingService.bookTourByIdForUsername(tourId, username);
+        return "redirect:/user/personal-account";
+    }
 
-        return "tours";
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({IllegalArgumentException.class,
+            NotPresentInDatabaseException.class})
+    public String handleException(Model model, RuntimeException ex) {
+        model.addAttribute("cause",ex.getCause());
+        model.addAttribute("message",ex.getLocalizedMessage());
+        log.info("                         "+ex.getLocalizedMessage());
+        return "singleMessagePage";
     }
 }

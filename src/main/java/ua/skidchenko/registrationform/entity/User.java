@@ -61,5 +61,9 @@ public class User implements UserDetails {
         return new ArrayList<>(Collections.singleton(role));
     }
 
+    public void setMoney(Long money) {
+        if(money < 0) throw new IllegalArgumentException("Money value cannot be negative!");
+        this.money = money;
+    }
 }
 

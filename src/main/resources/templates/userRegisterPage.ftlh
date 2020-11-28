@@ -3,11 +3,12 @@
 
 
 <@spring.message "message.user.registration.page.header"/>
-<@spring.message "form.header"/>
 <@localeChangeMacro.headerMacro/>
-
-<form action="/user/new" method="post">
-    <h1>Enter your data:</h1>
+<h1>
+    <@spring.message "form.header"/>
+</h1>
+<form action="/main/new" method="post">
+    <h1></h1>
     <table>
         <tr>
             <td><label for="firstname"><@spring.message "form.firstname"/></label><br>

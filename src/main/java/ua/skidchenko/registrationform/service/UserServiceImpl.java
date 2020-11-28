@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
                 .accountNonLocked(true)
                 .credentialsNonExpired(true)
                 .enabled(true)
-                .money(10000L)  //TODO
+                .money(1500L)  //TODO
                 .build();
     }
 }

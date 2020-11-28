@@ -36,7 +36,7 @@ public class Tour {
     private int amountOfPersons;
 
     @Column(nullable = false)
-    private int price;
+    private Long price;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tour_status")

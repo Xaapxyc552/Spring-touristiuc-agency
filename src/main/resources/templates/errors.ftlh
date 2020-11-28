@@ -1,8 +1,5 @@
 <#import "spring.ftl" as spring/>
-<#import "macroses/commonHeaderMacro.ftlh" as commonMacros>
-<@commonMacros.headerMacro/>
-
-<h1>Error during processing the request:</h1>
+<h1><@spring.message "exception.during.processing"/></h1>
 <table>
     <#list errors as error>
         <tr>

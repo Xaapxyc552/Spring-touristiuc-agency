@@ -71,7 +71,7 @@
             </tr>
             <th>
                 <#if userRole == "ROLE_USER">
-                    <a href="/tours/book/${tour.name}"><@spring.message "tour.book_tour"/></a>
+                    <a href="/tours/book/${tour.id}"><@spring.message "tour.book_tour"/></a>
                 </#if>
             </th>
             <tr>

@@ -10,6 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -22,6 +23,7 @@ import java.util.Locale;
 import java.util.Map;
 
 @SpringBootApplication
+@EnableTransactionManagement
 @ComponentScan(basePackages = "ua.skidchenko")
 @EnableJpaRepositories("ua.skidchenko.registrationform.repository")
 public class RegistrationFormApplication {
