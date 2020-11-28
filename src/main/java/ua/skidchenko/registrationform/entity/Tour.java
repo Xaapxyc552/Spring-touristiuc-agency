@@ -6,6 +6,7 @@ import ua.skidchenko.registrationform.entity.enums.TourStatus;
 import ua.skidchenko.registrationform.entity.enums.TourType;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Builder
@@ -41,9 +42,9 @@ public class Tour {
     @Column(name = "tour_status")
     private TourStatus tourStatus;
 
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name = "tour_type")
-    private TourType tourType;
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
+    @Column(name = "tour_types")
+    private List<TourType> tourTypes;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "hotel_type")

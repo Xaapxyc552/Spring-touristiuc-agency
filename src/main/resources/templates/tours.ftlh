@@ -5,12 +5,8 @@
 <html>
 <head>
     <style>
-        /*table {*/
-        /*    width: 100%; !* Ширина таблицы *!*/
-        /*}*/
-
         div {
-            max-width: 350px; /* Ограничиваем ширину таблицы */
+            max-width: 350px;
         }
     </style>
 </head>
@@ -51,7 +47,9 @@
             </tr>
             <tr>
                 <th><@spring.message "tour.tour_type"/></th>
-                <th>${tour.tourType}</th>
+                <#list tour.tourTypes as tourType>
+                    <th>${tourType.type.name()}</th><br>
+                </#list>
             </tr>
             <tr>
                 <th><@spring.message "tour.price"/></th>
@@ -66,8 +64,8 @@
                 <th>${tour.amountOfPersons}</th>
             </tr>
             <tr>
-            <th><@spring.message "tour.description"/></th>
-            <th>${tour.description}</th>
+                <th><@spring.message "tour.description"/></th>
+                <th>${tour.description}</th>
             </tr>
             <th>
                 <#if userRole == "ROLE_USER">
@@ -81,8 +79,8 @@
         <@spring.message "page.description"/>
         <#list pagesSequence as pageNumber>
             <#if pageNumber!=currentPage>
-            <a href="/tours/list/${pageNumber}">   ${pageNumber}   </a>
-                <#else>${pageNumber}
+                <a href="/tours/list/${pageNumber}">   ${pageNumber}   </a>
+            <#else>${pageNumber}
             </#if>
         </#list>
     </table>
