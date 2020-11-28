@@ -15,11 +15,6 @@ import java.util.Optional;
 public class PutUserInfoInterceptor implements HandlerInterceptor {
 
     @Override
-    public boolean preHandle(HttpServletRequest aRequest, HttpServletResponse aResponse, Object aHandler) throws Exception {
-        return true;
-    }
-
-    @Override
     public void postHandle(HttpServletRequest aRequest, HttpServletResponse aResponse, Object aHandler, ModelAndView aModelAndView) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Optional<? extends GrantedAuthority> userRole = authentication
@@ -34,10 +29,6 @@ public class PutUserInfoInterceptor implements HandlerInterceptor {
             aModelAndView.getModelMap().addAttribute("username",username);
             log.info("Attached to the model: User role" + userRole.get() + ", Username" + username + ".");
         }
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest aRequest, HttpServletResponse aResponse, Object aHandler, Exception aEx) throws Exception {
     }
 
 }

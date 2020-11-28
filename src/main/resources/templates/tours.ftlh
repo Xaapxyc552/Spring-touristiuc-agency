@@ -26,14 +26,14 @@
     </select>
     <input type="submit" value="Submit">
 </form>
-<#if currentOrder??>
-    <span>
-        <@spring.message "tour.current.ordering"/>: ${currentOrder}
-    </span>
-    <span>
-        <@spring.message "tour.current.direction"/>: ${currentDirection}
-    </span>
-</#if>
+<#--<#if currentOrder??>-->
+<#--    <span>-->
+<#--        <@spring.message "tour.current.ordering"/>: ${currentOrder}-->
+<#--    </span>-->
+<#--    <span>-->
+<#--        <@spring.message "tour.current.direction"/>: ${currentDirection}-->
+<#--    </span>-->
+<#--</#if>-->
 <div>
     <table>
         <#list tours as tour><#--TODO нужно ли выделение горящих туров?-->
@@ -47,9 +47,11 @@
             </tr>
             <tr>
                 <th><@spring.message "tour.tour_type"/></th>
+                <th>
                 <#list tour.tourTypes as tourType>
-                    <th>${tourType.type.name()}</th><br>
+                   ${tourType.type.name()}<br>
                 </#list>
+                </th>
             </tr>
             <tr>
                 <th><@spring.message "tour.price"/></th>
