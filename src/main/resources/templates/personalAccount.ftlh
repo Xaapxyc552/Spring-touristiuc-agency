@@ -7,12 +7,24 @@ ${email}<br>
 ${username}<br>
 ${userRole}<br>
 ${money}<br>
-
-    Ваши чеки:
+<table>
+    <@spring.message "check.header"/>
     <#list userChecks as check>
-        ${check.tour.name}
-        ${check.totalPrice}
-        ${check.status.status}
+        <tr>
+            <th><@spring.message "check.tour_name"/></th>
+            <th>${check.tour.name}</th>
+        </tr>
+        <tr>
+            <th><@spring.message "check.total_price"/></th>
+            <th>${check.totalPrice}</th>
+        </tr>
+        <tr>
+            <th><@spring.message "check.status"/></th>
+            <th>${check.status.status}</th>
+        </tr>
+        <tr>
+            <th><br></th>
+        </tr>
     </#list>
-
+</table>
 <#--//счет,имя, роль, ссылки на другие места-->

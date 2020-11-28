@@ -61,7 +61,7 @@ public class BookingService {
                 );
         if (user.getMoney().compareTo(tour.getPrice()) < 0) {
             log.warn("User has not enough money");
-            throw new NotPresentInDatabaseException("exception.user_has_not_enough_money");    //TODO
+            throw new IllegalArgumentException("User has not enough money");    //TODO
         }
         user.setMoney(user.getMoney() - tour.getPrice());
         userRepository.save(user);

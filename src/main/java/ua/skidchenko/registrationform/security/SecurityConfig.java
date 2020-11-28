@@ -17,12 +17,12 @@ import ua.skidchenko.registrationform.service.UserService;
 
 @Configuration
 @EnableWebSecurity
-public class Config extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     final
     UserService userService;
 
-    public Config(UserService userService) {
+    public SecurityConfig(UserService userService) {
         this.userService = userService;
     }
 
@@ -31,7 +31,7 @@ public class Config extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/user","/tours/book/**").hasAnyRole("ADMIN","MANAGER","USER")
+                .antMatchers("/user/**","/tours/book/**").hasAnyRole("ADMIN","MANAGER","USER")
                 .antMatchers("/**","/main/").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().permitAll().defaultSuccessUrl("/main",true)

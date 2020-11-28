@@ -16,9 +16,5 @@ public class NotPresentInDatabaseException extends RuntimeException {
         super(message, cause);
     }
 
-    @Override
-    public String getLocalizedMessage() {
-        return ResourceBundle.getBundle("exceptions", Locale.forLanguageTag("ua-UK"))
-                .getString(getMessage());
-    }
+
 }

@@ -1,6 +1,5 @@
 <#import "spring.ftl" as spring/>
 <#import "macroses/commonHeaderMacro.ftlh" as localeChangeMacro>
-<@localeChangeMacro.headerMacro/>
 
 <html>
 <head>
@@ -11,6 +10,7 @@
     </style>
 </head>
 <body>
+<@localeChangeMacro.headerMacro/>
 <form action="/tours/list/1" method="get">
     <@spring.message "tour.form.ordering.header"/>:
     <select name="order" id="order">
