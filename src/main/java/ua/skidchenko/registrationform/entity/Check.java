@@ -30,7 +30,14 @@ public class Check {
     @Column(name = "total_price")
     private Long totalPrice;
 
-    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "status_id")
     private CheckStatus status;
+
+    public void setTotalPrice(Long totalPrice) {
+        if (totalPrice < 0) {
+            throw new IllegalArgumentException("Total price cannot be negative!");
+        }
+        this.totalPrice = totalPrice;
+    }
 }

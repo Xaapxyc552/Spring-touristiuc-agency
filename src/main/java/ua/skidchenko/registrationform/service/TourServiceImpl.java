@@ -20,6 +20,8 @@ import java.util.Map;
 @Log4j2
 public class TourServiceImpl implements TourService {
 
+    private static final String PRIMARY_SORTING_PROPERTY = "burning";
+
     @Value("${page.size}")
     private Integer pageSize;
 
@@ -44,7 +46,7 @@ public class TourServiceImpl implements TourService {
     public Page<Tour> getPagedWaitingToursOrderedByArgs(OrderOfTours orderOfTours,
                                                         String direction,
                                                         int page) {
-        Sort.Order orderByBurning;
+        Sort.Order orderByPrimary;
         Sort.Order orderByUserSettings;
         Sort sorting;
         String sessionId = ((WebAuthenticationDetails) SecurityContextHolder
@@ -54,11 +56,11 @@ public class TourServiceImpl implements TourService {
                 .getSessionId();
 
         if (orderOfTours != null && direction != null) {
-            orderByBurning = new Sort.Order(Sort.Direction.DESC, "burning");
+            orderByPrimary = new Sort.Order(Sort.Direction.DESC, PRIMARY_SORTING_PROPERTY);
             orderByUserSettings = new Sort.Order(
                     Sort.Direction.fromString(direction), orderOfTours.getPropertyToSort()
             );
-            sorting = Sort.by(Arrays.asList(orderByBurning, orderByUserSettings));
+            sorting = Sort.by(Arrays.asList(orderByPrimary, orderByUserSettings));
             cacheOfUsersSorts.put(sessionId, sorting);
         } else {
             sorting = getSortFromCacheElseGetDefault(sessionId);
@@ -74,9 +76,16 @@ public class TourServiceImpl implements TourService {
         return tourRepository.findAllByTourStatus(TourStatus.WAITING, pr);
     }
 
+    @Override
+    public Page<Tour> getRegisteredTours(int page) {
+        Example<Tour> example = getTourExampleByStatus(TourStatus.REGISTERED);
+        PageRequest pr = PageRequest.of(page, pageSize);
+        return tourRepository.findAll(example,pr);
+    }
+
     private Sort getSortFromCacheElseGetDefault(String username) {
         Sort defaultSort;
-        Sort.Order orderByBurning = new Sort.Order(Sort.Direction.DESC, "burning");
+        Sort.Order orderByBurning = new Sort.Order(Sort.Direction.DESC, PRIMARY_SORTING_PROPERTY);
         Sort.Order orderByHotelType = new Sort.Order(
                 Sort.Direction.DESC, OrderOfTours.HOTEL_TYPE.getPropertyToSort()
         );

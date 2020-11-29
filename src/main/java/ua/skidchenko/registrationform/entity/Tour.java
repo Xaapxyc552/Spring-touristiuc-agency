@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "description")
+@ToString(exclude = {"description","tourTypes"})
 @EqualsAndHashCode
 
 @Entity
@@ -42,8 +42,10 @@ public class Tour {
     @Column(name = "tour_status")
     private TourStatus tourStatus;
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
-    @Column(name = "tour_types")
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinTable(name = "tour__tour_type",
+            joinColumns = @JoinColumn(name = "tour_type_id"),
+            inverseJoinColumns = @JoinColumn(name = "tour_id"))
     private List<TourType> tourTypes;
 
     @Enumerated(EnumType.ORDINAL)

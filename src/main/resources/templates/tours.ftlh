@@ -1,5 +1,5 @@
 <#import "spring.ftl" as spring/>
-<#import "macroses/commonHeaderMacro.ftlh" as localeChangeMacro>
+<#import "macroses/commonMacro.ftlh" as commonMacro>
 
 <html>
 <head>
@@ -10,7 +10,7 @@
     </style>
 </head>
 <body>
-<@localeChangeMacro.headerMacro/>
+<@commonMacro.headerMacro/>
 <form action="/tours/list/1" method="get">
     <@spring.message "tour.form.ordering.header"/>:
     <select name="order" id="order">
@@ -26,14 +26,9 @@
     </select>
     <input type="submit" value="Submit">
 </form>
-<#--<#if currentOrder??>-->
-<#--    <span>-->
-<#--        <@spring.message "tour.current.ordering"/>: ${currentOrder}-->
-<#--    </span>-->
-<#--    <span>-->
-<#--        <@spring.message "tour.current.direction"/>: ${currentDirection}-->
-<#--    </span>-->
-<#--</#if>-->
+
+<@commonMacro.pagingMacro pagesSequence=pagesSequence currentPage=currentPage  href="/tours/list/"/>
+
 <div>
     <table>
         <#list tours as tour><#--TODO нужно ли выделение горящих туров?-->
@@ -71,19 +66,15 @@
             </tr>
             <th>
                 <#if userRole == "ROLE_USER">
-                    <a href="/tours/book/${tour.id}"><@spring.message "tour.book_tour"/></a>
+                    <form action="/tours/book/${tour.id}" method="post">
+                        <input type="submit" value="<@spring.message "tour.book_tour"/>">
+                    </form>
                 </#if>
             </th>
             <tr>
                 <th><br></th>
             </tr>
-        </#list>
-        <@spring.message "page.description"/>
-        <#list pagesSequence as pageNumber>
-            <#if pageNumber!=currentPage>
-                <a href="/tours/list/${pageNumber}">   ${pageNumber}   </a>
-            <#else>${pageNumber}
-            </#if>
+            <#else><@spring.message "check.empty_list"/>
         </#list>
     </table>
 </div>

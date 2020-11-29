@@ -16,7 +16,11 @@
                         <a href="/main/new"><@spring.message "common.head.sign_in"/></a>
                     <#else>
                         <@spring.message "common.you_login_as"/> ${username}
-                        <a href="/user/personal-account"><@spring.message "common.personal_account"/></a>
+                        <#if userRole == "ROLE_USER">
+                            <a href="/user/personal-account/1"><@spring.message "common.personal_account"/></a>
+                        <#else>
+                            <a href="/manager/tours-operations/1"><@spring.message "common.manager_page"/></a>
+                        </#if>
                         <a href="/logout"><@spring.message "common.logout"/></a>
                     </#if>
                 </td>
@@ -33,3 +37,22 @@
     </table>
 </#macro>
 
+<#macro pagingMacro pagesSequence currentPage href>
+    <table>
+        <tr>
+            <th>
+                <@spring.message "page.description"/>
+            </th>
+        </tr>
+        <tr>
+            <#list pagesSequence as pageNumber>
+                <td>
+                    <#if pageNumber!=currentPage>
+                        <a href=${href+"${pageNumber}"}>   ${pageNumber}   </a>
+                    <#else>${pageNumber}
+                    </#if>
+                </td>
+            </#list>
+        </tr>
+    </table>
+</#macro>

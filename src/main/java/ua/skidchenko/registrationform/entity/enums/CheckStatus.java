@@ -3,12 +3,9 @@ package ua.skidchenko.registrationform.entity.enums;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ua.skidchenko.registrationform.entity.Check;
-import ua.skidchenko.registrationform.entity.Tour;
 
 import javax.persistence.*;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 
 @Data
@@ -20,10 +17,11 @@ import java.util.Map;
 public class CheckStatus {
 
     public enum Status {
-        WAITING_FOR_CONFIRM, CONFIRMED, DECLINED
+        WAITING_FOR_CONFIRM, CONFIRMED, DECLINED, CANCELED
     }
 
     public CheckStatus(Status status) {
+        this.id = (long) status.ordinal() + 1;
         this.status = status;
     }
 
@@ -34,11 +32,13 @@ public class CheckStatus {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
 
+    public void setId(Long id) {
+        throw new UnsupportedOperationException("Id cannot be changed!");
+    }
 }

@@ -11,4 +11,6 @@ public interface TourService {
     Page<Tour> getPagedWaitingToursOrderedByArgs(OrderOfTours orderOfTours, String direction, int page);
 
     Page<Tour> getPagedWaitingTours(int page);
+
+    Page<Tour> getRegisteredTours(int page);
 }

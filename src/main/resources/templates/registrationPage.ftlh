@@ -1,6 +1,5 @@
 <#import "spring.ftl" as spring/>
-<#import "macroses/commonHeaderMacro.ftlh" as localeChangeMacro>
-
+<#import "macroses/commonMacro.ftlh" as localeChangeMacro>
 
 <@spring.message "message.user.registration.page.header"/>
 <@localeChangeMacro.headerMacro/>

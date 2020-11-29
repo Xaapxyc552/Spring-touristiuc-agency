@@ -42,10 +42,8 @@ public class TourController {
         Page<Tour> orderedToursPage = tourService.getPagedWaitingToursOrderedByArgs(
                 order, direction, page - 1
         );
-//        model.addAttribute("currentOrder", order.name());
-//        model.addAttribute("currentDirection", direction);
         List<Integer> pagesSequence = IntStream
-                .rangeClosed(1,  orderedToursPage.getTotalPages())
+                .rangeClosed(1, orderedToursPage.getTotalPages())
                 .boxed()
                 .collect(Collectors.toList());
         model.addAttribute("tours", orderedToursPage.getContent());
@@ -54,7 +52,7 @@ public class TourController {
         return "tours";
     }
 
-    @GetMapping("/book/{tourId}")
+    @PostMapping("/book/{tourId}")
     public String bookTour(Model model,
                            @PathVariable(name = "tourId") Long tourId,
                            Principal principal) {
@@ -62,16 +60,33 @@ public class TourController {
         log.info("Starting booking tour to user. " +
                 "Username: " + username + " Tour ID: " + tourId);
         bookingService.bookTourByIdForUsername(tourId, username);
-        return "redirect:/user/personal-account";
+        return "redirect:/tours/confirmed-operation";
+    }
+
+    @PostMapping("/remove/{checkId}")
+    public String removeBookingFromTour(Model model,
+                                        @PathVariable(name = "checkId") Long checkId,
+                                        Principal principal) {
+        String username = principal.getName();
+        log.info("Starting removing booking from tour. " +
+                "Username: " + username + " Check ID: " + checkId);
+        bookingService.cancelBookingByCheckId(checkId, username);
+        return "redirect:/tours/confirmed-operation";
+    }
+
+    @GetMapping("/confirmed-operation")
+    public String confirmedOperation() {
+
+        return "redirect:/user/personal-account/1";
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({IllegalArgumentException.class,
-            NotPresentInDatabaseException.class})
+            NotPresentInDatabaseException.class,})
     public String handleException(Model model, RuntimeException ex) {
-        model.addAttribute("cause",ex.getCause());
-        model.addAttribute("message",ex.getLocalizedMessage());
-        log.info("                         "+ex.getLocalizedMessage());
+        model.addAttribute("cause", ex.getCause());
+        model.addAttribute("message", ex.getLocalizedMessage());
+        log.info("                         " + ex.getLocalizedMessage());
         return "singleMessagePage";
     }
 }

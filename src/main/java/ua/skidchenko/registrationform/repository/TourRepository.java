@@ -16,6 +16,8 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
 
     Optional<Tour> findByIdAndTourStatus(Long aLong, TourStatus status);
 
+    @NotNull
     @Override
     <S extends Tour> Page<S> findAll(@NotNull Example<S> example, @NotNull Pageable pageable);
+
 }

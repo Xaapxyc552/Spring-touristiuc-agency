@@ -3,6 +3,7 @@ package ua.skidchenko.registrationform.controller;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,8 @@ import ua.skidchenko.registrationform.service.UserService;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Log4j2
 @Controller
@@ -40,30 +43,25 @@ public class UserController {
     //прописать тайминги логированием
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/personal-account")
-    public String enterPersonalAccount(@NotNull Principal principal,
-                                       Model model) {
+    @GetMapping("/personal-account/{page}")
+    public String personalAccountPage(@NotNull Principal principal,
+                                      Model model,
+                                      @PathVariable(name = "page") int page) {
         User userFromDatabase = userService.getUserByUsername(principal.getName());
         model.addAttribute("email", userFromDatabase.getEmail());
         model.addAttribute("firstname", userFromDatabase.getFirstname());
         model.addAttribute("money", userFromDatabase.getMoney());
-        List<Check> userChecks = bookingService
-                .findAllChecksByUsernameOrderByStatus(principal.getName());
-        model.addAttribute("userChecks", userChecks);
+        Page<Check> userChecks = bookingService
+                .findAllChecksByUsernameOrderByStatus(principal.getName(), page - 1);
+        List<Integer> pagesSequence = IntStream
+                .rangeClosed(1, userChecks.getTotalPages())
+                .boxed()
+                .collect(Collectors.toList());
+        model.addAttribute("userChecks", userChecks.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pagesSequence", pagesSequence);
         return "personalAccount";
     }
-
-
-
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/all-users")
-    public String displayAllUsers(Model model) {
-        List<User> usersToDisplay = userService.readAllUsersFromDB();
-        log.info("Retrieved from DB data about all users:" + usersToDisplay.toString());
-        model.addAttribute("usersToDisplay", usersToDisplay);
-        return "displayAllUsers";
-    }
-
 
 
 }
