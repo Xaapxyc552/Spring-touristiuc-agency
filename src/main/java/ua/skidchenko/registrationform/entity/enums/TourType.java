@@ -10,6 +10,7 @@ import javax.persistence.*;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -43,13 +44,22 @@ public class TourType {
     @Column(name = "type")
     private Type type;
 
-    @ManyToMany(fetch = FetchType.EAGER/*, cascade = CascadeType.MERGE*/)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "tour__tour_type",
-            joinColumns = @JoinColumn(name = "tour_id"),
-            inverseJoinColumns = @JoinColumn(name = "tour_type_id"))
+            joinColumns = @JoinColumn(name = "tour_type_id"),
+            inverseJoinColumns = @JoinColumn(name = "tour_id"))
+
     private List<Tour> tour;
 
     public void setId(Long id) {
         throw new UnsupportedOperationException("Id cannot be changed!");
+    }
+
+    public static List<TourType> getTourTypesFromStringList(List<String> list) {
+        return list.stream().
+                map(el -> TourType.getInstanceByType(
+                        Enum.valueOf(TourType.Type.class, el))
+                )
+                .collect(Collectors.toList());
     }
 }

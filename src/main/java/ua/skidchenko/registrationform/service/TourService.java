@@ -1,7 +1,8 @@
 package ua.skidchenko.registrationform.service;
 
 import org.springframework.data.domain.Page;
-import ua.skidchenko.registrationform.controller.OrderOfTours;
+import ua.skidchenko.registrationform.controller.enums.OrderOfTours;
+import ua.skidchenko.registrationform.dto.TourDTO;
 import ua.skidchenko.registrationform.entity.Tour;
 
 public interface TourService {
@@ -13,4 +14,10 @@ public interface TourService {
     Page<Tour> getPagedWaitingTours(int page);
 
     Page<Tour> getRegisteredTours(int page);
+
+    Tour saveNewTour(TourDTO tourDTO);
+
+    TourDTO getWaitingTourDTOById(Long tourId);
+
+    Tour updateTourAfterChanges(TourDTO tourDTO);
 }

@@ -16,7 +16,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
-import ua.skidchenko.registrationform.interceptors.PutUserInfoInterceptor;
+import ua.skidchenko.registrationform.interceptors.PutUserInfoIntoModelInterceptor;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -51,7 +51,7 @@ public class RegistrationFormApplication {
                 l.setParamName("lang");
                 registry.addInterceptor(l);
 
-                registry.addInterceptor(new PutUserInfoInterceptor());
+                registry.addInterceptor(new PutUserInfoIntoModelInterceptor());
             }
         };
     }

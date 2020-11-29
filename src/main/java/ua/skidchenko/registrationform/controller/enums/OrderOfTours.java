@@ -1,4 +1,4 @@
-package ua.skidchenko.registrationform.controller;
+package ua.skidchenko.registrationform.controller.enums;
 
 public enum OrderOfTours {
     AMOUNT_OF_PERSONS("amountOfPersons")

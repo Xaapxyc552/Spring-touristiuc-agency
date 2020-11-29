@@ -43,20 +43,20 @@ public class UserController {
     //прописать тайминги логированием
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/personal-account/{page}")
+    @GetMapping("/personal-account/{page}")                 //TODO нужна ли тут @Transactional?
     public String personalAccountPage(@NotNull Principal principal,
-                                      Model model,
-                                      @PathVariable(name = "page") int page) {
+                                      @PathVariable(name = "page") int page,
+                                      Model model) {
         User userFromDatabase = userService.getUserByUsername(principal.getName());
-        model.addAttribute("email", userFromDatabase.getEmail());
-        model.addAttribute("firstname", userFromDatabase.getFirstname());
-        model.addAttribute("money", userFromDatabase.getMoney());
         Page<Check> userChecks = bookingService
                 .findAllChecksByUsernameOrderByStatus(principal.getName(), page - 1);
         List<Integer> pagesSequence = IntStream
                 .rangeClosed(1, userChecks.getTotalPages())
                 .boxed()
                 .collect(Collectors.toList());
+        model.addAttribute("email", userFromDatabase.getEmail());
+        model.addAttribute("firstname", userFromDatabase.getFirstname());
+        model.addAttribute("money", userFromDatabase.getMoney());
         model.addAttribute("userChecks", userChecks.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("pagesSequence", pagesSequence);

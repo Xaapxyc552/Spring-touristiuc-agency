@@ -1,7 +1,5 @@
 package ua.skidchenko.registrationform.exceptions;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class NotPresentInDatabaseException extends RuntimeException {
     public NotPresentInDatabaseException() {

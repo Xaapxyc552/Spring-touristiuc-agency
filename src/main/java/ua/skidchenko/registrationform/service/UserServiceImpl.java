@@ -20,10 +20,11 @@ public class UserServiceImpl implements UserService {
     final
     UserRepository repository;
 
+    final
     BCryptPasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(@Lazy UserRepository repository
-            , @Lazy BCryptPasswordEncoder passwordEncoder) {
+    public UserServiceImpl(@Lazy UserRepository repository,
+                           @Lazy BCryptPasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -45,15 +46,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> readAllUsersFromDB() {
+    public List<User> getAllUsers() {
         List<User> allUsersFromDb = repository.findAll();
         log.info("Retrieved from DB all users: " + allUsersFromDb.toString());
         return allUsersFromDb;
     }
 
     private User buildUserFromDTO(UserDTO userDTO) {
-        return User.builder().
-                password(passwordEncoder.encode(userDTO.getPassword()))
+        return User.builder()
+                .password(passwordEncoder.encode(userDTO.getPassword()))
                 .firstname(userDTO.getFirstname())
                 .role(Role.ROLE_USER)
                 .email(userDTO.getEmail())

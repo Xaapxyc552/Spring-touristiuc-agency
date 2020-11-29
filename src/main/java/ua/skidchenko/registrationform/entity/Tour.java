@@ -44,8 +44,8 @@ public class Tour {
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(name = "tour__tour_type",
-            joinColumns = @JoinColumn(name = "tour_type_id"),
-            inverseJoinColumns = @JoinColumn(name = "tour_id"))
+            joinColumns = @JoinColumn(name = "tour_id"),
+            inverseJoinColumns = @JoinColumn(name = "tour_type_id"))
     private List<TourType> tourTypes;
 
     @Enumerated(EnumType.ORDINAL)

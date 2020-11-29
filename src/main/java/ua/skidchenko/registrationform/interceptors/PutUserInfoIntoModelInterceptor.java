@@ -11,8 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
+@SuppressWarnings("NullableProblems")
 @Log4j2
-public class PutUserInfoInterceptor implements HandlerInterceptor {
+public class PutUserInfoIntoModelInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest aRequest, HttpServletResponse aResponse, Object aHandler, ModelAndView aModelAndView) throws Exception {

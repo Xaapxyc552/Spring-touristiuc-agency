@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ua.skidchenko.registrationform.controller.enums.OrderOfTours;
 import ua.skidchenko.registrationform.entity.Tour;
 import ua.skidchenko.registrationform.exceptions.NotPresentInDatabaseException;
 import ua.skidchenko.registrationform.service.BookingService;
@@ -33,21 +34,20 @@ public class TourController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/list/{page}")
+    @PostMapping("/list/{page}")
     public String getTours(Model model,
                            @RequestParam(name = "order", required = false) OrderOfTours order,
                            @RequestParam(name = "direction", required = false) String direction,
-                           @PathVariable(name = "page") int page) {
-        page = (page == 0) ? 1 : page;
+                           @PathVariable(name = "page") int currentPage) {
         Page<Tour> orderedToursPage = tourService.getPagedWaitingToursOrderedByArgs(
-                order, direction, page - 1
+                order, direction, currentPage - 1
         );
         List<Integer> pagesSequence = IntStream
                 .rangeClosed(1, orderedToursPage.getTotalPages())
                 .boxed()
                 .collect(Collectors.toList());
         model.addAttribute("tours", orderedToursPage.getContent());
-        model.addAttribute("currentPage", page);
+        model.addAttribute("currentPage", currentPage);
         model.addAttribute("pagesSequence", pagesSequence);
         return "tours";
     }
@@ -64,8 +64,7 @@ public class TourController {
     }
 
     @PostMapping("/remove/{checkId}")
-    public String removeBookingFromTour(Model model,
-                                        @PathVariable(name = "checkId") Long checkId,
+    public String removeBookingFromTour(@PathVariable(name = "checkId") Long checkId,
                                         Principal principal) {
         String username = principal.getName();
         log.info("Starting removing booking from tour. " +
@@ -76,7 +75,6 @@ public class TourController {
 
     @GetMapping("/confirmed-operation")
     public String confirmedOperation() {
-
         return "redirect:/user/personal-account/1";
     }
 
@@ -86,7 +84,6 @@ public class TourController {
     public String handleException(Model model, RuntimeException ex) {
         model.addAttribute("cause", ex.getCause());
         model.addAttribute("message", ex.getLocalizedMessage());
-        log.info("                         " + ex.getLocalizedMessage());
         return "singleMessagePage";
     }
 }

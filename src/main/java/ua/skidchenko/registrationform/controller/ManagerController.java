@@ -21,7 +21,7 @@ import java.util.stream.IntStream;
 @RequestMapping("/manager")
 public class ManagerController {
 
-    private static final String ATTRIBUTE_TO_PASS_IF_CONFIRMED = "messaage";
+    private static final String ATTRIBUTE_TO_PASS_IF_CONFIRMED = "message";
 
     final
     BookingService bookingService;
@@ -38,9 +38,9 @@ public class ManagerController {
     public String getManageableTours(Model model,
                                      @PathVariable(name = "page") int currentPage) {
         Page<Check> pagedWaitingChecks = bookingService.getPagedWaitingChecks(currentPage - 1);
-        List<Integer> pagesSequence = IntStream
-                .rangeClosed(1, pagedWaitingChecks.getTotalPages())
-                .boxed()
+        List<Integer> pagesSequence = IntStream                                 //TODO можно ли вынести формироание
+                .rangeClosed(1, pagedWaitingChecks.getTotalPages())             // данных для пагинации в отдельный класс?
+                .boxed()                                                        // где он должен быть?
                 .collect(Collectors.toList());
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("waitingChecks", pagedWaitingChecks.getContent());
@@ -49,8 +49,8 @@ public class ManagerController {
     }
 
     @PostMapping("/check/decline/{checkId}")
-    public RedirectView declineCheck(@PathVariable(name = "checkId") Long checkId,
-                                     final RedirectAttributes redirectAttributes) {
+    public RedirectView declineBooking(@PathVariable(name = "checkId") Long checkId,
+                                       final RedirectAttributes redirectAttributes) {
         bookingService.declineBooking(checkId);
         redirectAttributes.addFlashAttribute(
                 ATTRIBUTE_TO_PASS_IF_CONFIRMED, "response.message.book_declined"
@@ -59,8 +59,8 @@ public class ManagerController {
     }
 
     @PostMapping("/check/confirm/{checkId}")
-    public RedirectView confirmCheck(@PathVariable(name = "checkId") Long checkId,
-                                     final RedirectAttributes redirectAttributes) {
+    public RedirectView confirmBooking(@PathVariable(name = "checkId") Long checkId,
+                                       final RedirectAttributes redirectAttributes) {
         bookingService.confirmBooking(checkId);
         redirectAttributes.addFlashAttribute(
                 ATTRIBUTE_TO_PASS_IF_CONFIRMED, "response.message.book_confirmed"
@@ -70,8 +70,8 @@ public class ManagerController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/confirmed-operation")
-    public String confirmCreatingOfUser(Model model,
-                                        @ModelAttribute(ATTRIBUTE_TO_PASS_IF_CONFIRMED) final String message) {
+    public String confirmOperationPage(Model model,
+                                       @ModelAttribute(ATTRIBUTE_TO_PASS_IF_CONFIRMED) final String message) {
         log.info("Redirected to PRG-page.");
         log.info(message);
         model.addAttribute(ATTRIBUTE_TO_PASS_IF_CONFIRMED, message);

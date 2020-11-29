@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ua.skidchenko.registrationform.entity.Tour;
 import ua.skidchenko.registrationform.entity.enums.TourStatus;
 
+import java.util.Collection;
 import java.util.Optional;
 
 public interface TourRepository extends JpaRepository<Tour, Long> {
@@ -15,6 +16,7 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
     Page<Tour> findAllByTourStatus(TourStatus tourStatus,Pageable pageable);
 
     Optional<Tour> findByIdAndTourStatus(Long aLong, TourStatus status);
+    Optional<Tour> findByIdAndTourStatusIn(Long id, Collection<TourStatus> statuses);
 
     @NotNull
     @Override

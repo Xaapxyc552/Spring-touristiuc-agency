@@ -41,10 +41,10 @@ alter table tour_type
 
 create table if not exists tour__tour_type
 (
-    tour_id      bigint not null
+    tour_type_id bigint not null
         constraint fk4j9hey1pxg65kw9ixmuoqeg6v
             references tour_type,
-    tour_type_id bigint not null
+    tour_id      bigint not null
         constraint fkhulug5wfd0hb8q25bwr2f6j3n
             references tour
 );
