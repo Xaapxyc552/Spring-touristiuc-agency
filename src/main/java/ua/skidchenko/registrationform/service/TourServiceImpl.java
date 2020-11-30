@@ -44,13 +44,16 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public Tour saveTourToDB(Tour tour) {
+        log.info("Saving tour to DB: " + tour.toString());
         return tourRepository.save(tour);
     }
 
     @Override
     public Page<Tour> getPagedWaitingToursOrderedByArgs(OrderOfTours orderOfTours,
                                                         String direction,
-                                                        int page) {
+                                                        int currentPage) {
+        log.info("Retrieving paged tours with status \"WAITING\" from DB ordered by order:" + orderOfTours.name() +
+                ". Direction: " + direction + ". Current page: " + currentPage + ".");
         Sort.Order orderByPrimary;
         Sort.Order orderByUserSettings;
         Sort sorting;
@@ -71,18 +74,20 @@ public class TourServiceImpl implements TourService {
             sorting = getSortFromCacheElseGetDefault(sessionId);
         }
         Example<Tour> example = getTourExampleByStatus(TourStatus.WAITING);
-        PageRequest pr = PageRequest.of(page, pageSize, sorting);
+        PageRequest pr = PageRequest.of(currentPage, pageSize, sorting);
         return tourRepository.findAll(example, pr);
     }
 
     @Override
     public Page<Tour> getPagedWaitingTours(int page) {
+        log.info("Retrieving paged tours from DB with status \"WAITING\". Current page:" + page);
         PageRequest pr = PageRequest.of(page, pageSize);
         return tourRepository.findAllByTourStatus(TourStatus.WAITING, pr);
     }
 
     @Override
     public Page<Tour> getRegisteredTours(int page) {
+        log.info("Retrieving tours from DB with status \"REGISTERED\".");
         Example<Tour> example = getTourExampleByStatus(TourStatus.REGISTERED);
         PageRequest pr = PageRequest.of(page, pageSize);
         return tourRepository.findAll(example, pr);
@@ -90,12 +95,14 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public Tour saveNewTour(TourDTO tourDTO) {
+        log.info("Saving new into DB tour built from DTO: " + tourDTO.toString());
         Tour newTour = buildNewTourFromTourDTO(tourDTO);
         return tourRepository.save(newTour);
     }
 
     @Override
     public TourDTO getWaitingTourDTOById(Long tourId) {
+        log.info("Retrieving new tourDTO from DB by tour ID. Tour ID: " + tourId);
         Tour tour = tourRepository.findByIdAndTourStatusIn
                 (tourId, Collections.singletonList(TourStatus.WAITING))
                 .orElseThrow(() -> {
@@ -118,12 +125,14 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public Tour updateTourAfterChanges(TourDTO tourDTO) {
+        log.info("Updating tour with data from tourDTO: " + tourDTO.toString());
         Tour tourToSave = buildNewTourFromTourDTO(tourDTO);
         tourRepository.save(tourToSave);
         return tourToSave;
     }
 
     private Sort getSortFromCacheElseGetDefault(String username) {
+        log.info("Getting user's sorting from cache by username. Username: " + username);
         return cacheOfUsersSorts.computeIfAbsent(username, (n) -> {
             Sort.Order orderByBurning = new Sort.Order(Sort.Direction.DESC, PRIMARY_SORTING_PROPERTY);
             Sort.Order orderByHotelType = new Sort.Order(
@@ -152,6 +161,7 @@ public class TourServiceImpl implements TourService {
     }
 
     private Tour buildNewTourFromTourDTO(TourDTO tourDTO) {
+        log.info("Building new tour from DTO to save or to update edited tour. TourDTO: " + tourDTO.toString());
         Tour build = Tour.builder()
                 .tourStatus(TourStatus.WAITING)
                 .hotelType(tourDTO.getHotelType())

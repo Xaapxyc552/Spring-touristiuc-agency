@@ -47,7 +47,9 @@ public class UserController {
     public String personalAccountPage(@NotNull Principal principal,
                                       @PathVariable(name = "page") int page,
                                       Model model) {
-        User userFromDatabase = userService.getUserByUsername(principal.getName());
+        String username = principal.getName();
+        User userFromDatabase = userService.getUserByUsername(username);
+        log.info("Retrieving user information to display at personal-account page. Username: " + username);
         Page<Check> userChecks = bookingService
                 .findAllChecksByUsernameOrderByStatus(principal.getName(), page - 1);
         List<Integer> pagesSequence = IntStream

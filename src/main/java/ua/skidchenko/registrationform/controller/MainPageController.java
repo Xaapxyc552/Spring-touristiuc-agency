@@ -79,7 +79,7 @@ public class MainPageController {
             UsernameNotFoundException.class,
             InvalidURLException.class})
     public String handleException(WrongFormInputDataException exception, Model model) {
-        log.info("Starting handling exception: " + exception.getErrors());
+        log.warn("Handling exception: " + exception.getErrors());
         model.addAttribute("errors", exception.getErrors());
         return "errors";
     }

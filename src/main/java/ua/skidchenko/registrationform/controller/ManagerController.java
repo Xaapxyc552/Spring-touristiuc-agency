@@ -27,7 +27,8 @@ public class ManagerController {
     BookingService bookingService;
 
     final
-    TourService tourService;
+    TourService tourService;// TODO нужно ли использовать тут DI? В смысле использовать
+                            // интерфейся сотдельными методами для менеджера (юзера, админа)
 
     public ManagerController(BookingService bookingService, TourService tourService) {
         this.bookingService = bookingService;
@@ -37,6 +38,7 @@ public class ManagerController {
     @GetMapping("/tours-operations/{page}")
     public String getManageableTours(Model model,
                                      @PathVariable(name = "page") int currentPage) {
+        log.info("Retrievingg paged tours with status \"WAITING_TO_CONFIRM\" to be managed by manager.");
         Page<Check> pagedWaitingChecks = bookingService.getPagedWaitingChecks(currentPage - 1);
         List<Integer> pagesSequence = IntStream                                 //TODO можно ли вынести формироание
                 .rangeClosed(1, pagedWaitingChecks.getTotalPages())             // данных для пагинации в отдельный класс?
@@ -51,6 +53,7 @@ public class ManagerController {
     @PostMapping("/check/decline/{checkId}")
     public RedirectView declineBooking(@PathVariable(name = "checkId") Long checkId,
                                        final RedirectAttributes redirectAttributes) {
+        log.info("Declining booking by checkId. Check ID: " + checkId);
         bookingService.declineBooking(checkId);
         redirectAttributes.addFlashAttribute(
                 ATTRIBUTE_TO_PASS_IF_CONFIRMED, "response.message.book_declined"
@@ -61,6 +64,7 @@ public class ManagerController {
     @PostMapping("/check/confirm/{checkId}")
     public RedirectView confirmBooking(@PathVariable(name = "checkId") Long checkId,
                                        final RedirectAttributes redirectAttributes) {
+        log.info("Confirming booking by checkId. Check ID: " + checkId);
         bookingService.confirmBooking(checkId);
         redirectAttributes.addFlashAttribute(
                 ATTRIBUTE_TO_PASS_IF_CONFIRMED, "response.message.book_confirmed"
@@ -73,7 +77,6 @@ public class ManagerController {
     public String confirmOperationPage(Model model,
                                        @ModelAttribute(ATTRIBUTE_TO_PASS_IF_CONFIRMED) final String message) {
         log.info("Redirected to PRG-page.");
-        log.info(message);
         model.addAttribute(ATTRIBUTE_TO_PASS_IF_CONFIRMED, message);
         model.addAttribute("href", "/manager/tours-operations/1");
         model.addAttribute("hrefDescription", "response.message.go_to_manager_page");

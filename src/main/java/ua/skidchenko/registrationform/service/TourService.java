@@ -9,7 +9,7 @@ public interface TourService {
 
     Tour saveTourToDB(Tour tour);
 
-    Page<Tour> getPagedWaitingToursOrderedByArgs(OrderOfTours orderOfTours, String direction, int page);
+    Page<Tour> getPagedWaitingToursOrderedByArgs(OrderOfTours orderOfTours, String direction, int currentPage);
 
     Page<Tour> getPagedWaitingTours(int page);
 

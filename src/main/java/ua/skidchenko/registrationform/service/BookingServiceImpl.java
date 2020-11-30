@@ -39,7 +39,9 @@ public class BookingServiceImpl implements BookingService {
     final
     CheckRepository checkRepository;
 
-    public BookingServiceImpl(TourRepository tourRepository, UserRepository userRepository, CheckRepository checkPerository) {
+    public BookingServiceImpl(TourRepository tourRepository,
+                              UserRepository userRepository,
+                              CheckRepository checkPerository) {
         this.tourRepository = tourRepository;
         this.userRepository = userRepository;
         this.checkRepository = checkPerository;
@@ -48,6 +50,8 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public Check bookTourByIdForUsername(Long tourId, String username) {
+        log.info("Booking tour for user by username and tourId. " +
+                "Username: " + username.toString() + ". Tour ID:" + tourId + ".");
         Tour tour = getTourFromRepositoryByIdAndStatus(tourId, TourStatus.WAITING);
         User user = getUserFromRepository(username);
 
@@ -73,6 +77,8 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public Page<Check> findAllChecksByUsernameOrderByStatus(String username, int page) {
+        log.info("Retrieving paged user's checks ordered by status. Username: " +
+                "" + username.toString() + ". Page: " + page);
         User byUsername = getUserFromRepository(username);
         PageRequest pr = PageRequest.of(page, pageSize);
         return checkRepository.findAllByUserOrderByStatus(byUsername, pr);
@@ -81,6 +87,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public Boolean cancelBookingByCheckId(Long checkId, String username) {
+        log.info("Canceling booking by checkId. Check ID: " + checkId.toString());
         Check checkFromDB = getCheckFromRepository(checkId);
         User userFromDB = checkFromDB.getUser();
         if (!userFromDB.getUsername().equals(username)) {
@@ -100,6 +107,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public Boolean declineBooking(Long checkId) {
+        log.info("Canceling booking by checkId. Check ID: " + checkId.toString());
         Check checkToDecline = getCheckFromRepository(checkId);
         User user = checkToDecline.getUser();
         Tour tourToDecline = checkToDecline.getTour();

@@ -28,7 +28,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             log.warn("User with username " + username + " not found in DB. Exception thrown.");
             return new UsernameNotFoundException("User with username " + username + " was not found.");
         });
-        log.info(user);
+        log.info("Retrieved by Spring Security user from UserService: " + user);
         return user;
     }
 }

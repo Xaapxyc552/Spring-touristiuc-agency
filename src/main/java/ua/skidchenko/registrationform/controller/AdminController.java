@@ -30,14 +30,14 @@ public class AdminController {
 
     @PostMapping("/new-tour/create")
     public String createTourFromDTO(@Valid TourDTO tourDTO) {
-        log.info(tourDTO.toString());
+        log.info("Creating new tour from TourDTO:" + tourDTO.toString());
         tourService.saveNewTour(tourDTO);
         return "redirect:/admin/confirm";
     }
 
     @PostMapping("/tour/save")
     public String saveTourAfterChanges(@Valid TourDTO tourDTO) {
-        log.info(tourDTO.toString());
+        log.info("Saving tour after editing :"+ tourDTO.toString());
         tourService.updateTourAfterChanges(tourDTO);
         return "redirect:/admin/confirm";
     }
@@ -46,9 +46,9 @@ public class AdminController {
     @PostMapping("/tour/edit/{tourId}")
     public String getTourByIdToEdit(Model model,
                                     @PathVariable(name = "tourId") Long tourId) {
+        log.info("Retrieving tour by tourId from DB to be edited by user. Tour id: " + tourId);
         TourDTO tourDTO = tourService.getWaitingTourDTOById(tourId);
-
-        model.addAttribute("tourDTO",tourDTO);
+        model.addAttribute("tourDTO", tourDTO);
         return "/admin/editTour";
     }
 

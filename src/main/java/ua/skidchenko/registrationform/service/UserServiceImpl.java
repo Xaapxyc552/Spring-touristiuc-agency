@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByUsername(String username) {
+        log.info("Retrieving user by username. Username: " + username);
         Optional<User> userOptional = repository.findByUsername(username);
         return userOptional.orElseThrow(() -> {
             log.warn("User with username " + username + " not found in DB. Exception thrown.");
@@ -53,6 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private User buildUserFromDTO(UserDTO userDTO) {
+        log.info("Building new user from userDTO. UserDTO: " + userDTO.toString());
         return User.builder()
                 .password(passwordEncoder.encode(userDTO.getPassword()))
                 .firstname(userDTO.getFirstname())

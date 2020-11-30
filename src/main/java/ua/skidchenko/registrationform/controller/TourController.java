@@ -39,6 +39,8 @@ public class TourController {
                            @RequestParam(name = "order", required = false) OrderOfTours order,
                            @RequestParam(name = "direction", required = false) String direction,
                            @PathVariable(name = "page") int currentPage) {
+        log.info("Retrieving paged tours with status \"WAITING\" from DB ordered by order:" + order.name() +
+                ". Direction: " + direction + ". Current page: " + currentPage + ".");
         Page<Tour> orderedToursPage = tourService.getPagedWaitingToursOrderedByArgs(
                 order, direction, currentPage - 1
         );
@@ -57,8 +59,7 @@ public class TourController {
                            @PathVariable(name = "tourId") Long tourId,
                            Principal principal) {
         String username = principal.getName();
-        log.info("Starting booking tour to user. " +
-                "Username: " + username + " Tour ID: " + tourId);
+        log.info("Starting booking tour to user. Username: " + username + " Tour ID: " + tourId);
         bookingService.bookTourByIdForUsername(tourId, username);
         return "redirect:/tours/confirmed-operation";
     }
@@ -67,8 +68,7 @@ public class TourController {
     public String removeBookingFromTour(@PathVariable(name = "checkId") Long checkId,
                                         Principal principal) {
         String username = principal.getName();
-        log.info("Starting removing booking from tour. " +
-                "Username: " + username + " Check ID: " + checkId);
+        log.info("Removing booking from tour by checkId. Username: " + username + " Check ID: " + checkId);
         bookingService.cancelBookingByCheckId(checkId, username);
         return "redirect:/tours/confirmed-operation";
     }
@@ -82,7 +82,8 @@ public class TourController {
     @ExceptionHandler({IllegalArgumentException.class,
             NotPresentInDatabaseException.class,})
     public String handleException(Model model, RuntimeException ex) {
-        model.addAttribute("cause", ex.getCause());
+        log.warn("Handling exception in TourController. Exception: " + ex.getMessage());
+                model.addAttribute("cause", ex.getCause());
         model.addAttribute("message", ex.getLocalizedMessage());
         return "singleMessagePage";
     }
