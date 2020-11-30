@@ -18,7 +18,7 @@
 </head>
 <body>
 <@commonMacro.headerMacro/>
-<form action="/tours/list/1" method="post">
+<form action="/tours/list/1" method="get">
     <@spring.message "tour.form.ordering.header"/>:
     <select name="order" id="order">
         <option value="AMOUNT_OF_PERSONS"><@spring.message "tour.amount_of_persons"/>:</option>

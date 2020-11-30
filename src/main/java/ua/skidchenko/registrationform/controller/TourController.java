@@ -34,7 +34,7 @@ public class TourController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/list/{page}")
+    @GetMapping("/list/{page}")
     public String getTours(Model model,
                            @RequestParam(name = "order", required = false) OrderOfTours order,
                            @RequestParam(name = "direction", required = false) String direction,

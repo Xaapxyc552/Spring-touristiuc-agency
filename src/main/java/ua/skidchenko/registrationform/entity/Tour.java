@@ -42,7 +42,7 @@ public class Tour {
     @Column(name = "tour_status")
     private TourStatus tourStatus;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "tour__tour_type",
             joinColumns = @JoinColumn(name = "tour_id"),
             inverseJoinColumns = @JoinColumn(name = "tour_type_id"))
