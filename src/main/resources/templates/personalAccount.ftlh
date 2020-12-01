@@ -2,11 +2,18 @@
 <#import "macroses/commonMacro.ftlh" as commonMacros>
 <@commonMacros.headerMacro/>
 
-${firstname}<br>
-${email}<br>
-${username}<br>
-${userRole}<br>
-${money}<br>
+<@spring.message "personal_page.firstname"/>${firstname}<br>
+<@spring.message "personal_page.email"/>${email}<br>
+<@spring.message "personal_page.username"/>${username}<br>
+<@spring.message "personal_page.role"/>${userRole}<br>
+<@spring.message "personal_page.money"/>${money}<br>
+<br>
+<form action="/user/recharge" method="post">
+    <@spring.message "personal_page.recharge"/><br>
+    <label for="amountOfCharge"><input type="number" id="amountOfCharge" name="amountOfCharge"></label>
+    <input type="submit" value="<@spring.message "personal_page.recharge"/>">
+</form>
+
 
 <@commonMacros.pagingMacro pagesSequence=pagesSequence currentPage=currentPage  href="/user/personal-account/"/>
 
@@ -39,7 +46,7 @@ ${money}<br>
         <tr>
             <th><br></th>
         </tr>
-        <#else> <@spring.message "check.you_dont_have_bookings_yet"/>
+    <#else> <@spring.message "check.you_dont_have_bookings_yet"/>
     </#list>
 </table>
 <#--//счет,имя, роль, ссылки на другие места-->
