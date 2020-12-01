@@ -3,6 +3,7 @@
 <@commonMacro.headerMacro/>
 
 <form action="/admin/new-tour/create" method="post">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     <table>
         <tr>
             <td><label for="name"><@spring.message "tour.form.name"/></label><br>

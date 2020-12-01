@@ -9,6 +9,7 @@
 <@spring.message "personal_page.money"/>${money}<br>
 <br>
 <form action="/user/recharge" method="post">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     <@spring.message "personal_page.recharge"/><br>
     <label for="amountOfCharge"><input type="number" id="amountOfCharge" name="amountOfCharge"></label>
     <input type="submit" value="<@spring.message "personal_page.recharge"/>">
@@ -36,7 +37,7 @@
             <tr>
                 <th>
                     <form action="/tours/remove/${check.id}" method="post">
-
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                         <input type="submit" value="<@spring.message "check.remove"/>">
 
                     </form>

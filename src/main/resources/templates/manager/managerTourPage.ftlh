@@ -4,6 +4,7 @@
 
 <@commonMacro.pagingMacro pagesSequence=pagesSequence currentPage=currentPage  href="/manager/tours-operations/"/>
 <table>
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     <#list waitingChecks as check>
         <tr>
             <th><@spring.message "check.owner_username"/></th>
@@ -29,11 +30,13 @@
             <tr>
                 <th>
                     <form action="/manager/check/decline/${check.id}" method="post">
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                         <input type="submit" value="<@spring.message "check.decline"/>">
                     </form>
                 </th>
                 <th>
                     <form action="/manager/check/confirm/${check.id}" method="post">
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                         <input type="submit" value="<@spring.message "check.confirm"/>">
                     </form>
                 </th>

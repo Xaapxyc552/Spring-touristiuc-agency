@@ -3,6 +3,7 @@
 <body>
 <@commonMacro.headerMacro/>
 <form action="/tours/list/1" method="get">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     <@spring.message "tour.form.ordering.header"/>:
     <select name="order" id="order">
         <option value="AMOUNT_OF_PERSONS"><@spring.message "tour.amount_of_persons"/>:</option>
@@ -58,11 +59,13 @@
         <td>
             <#if userRole == "ROLE_USER">
                 <form action="/tours/book/${tour.id}" method="post">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     <input type="submit" value="<@spring.message "tour.book_tour"/>">
                 </form>
             </#if>
             <#if userRole == "ROLE_ADMIN">
                 <form action="/admin/tour/edit/${tour.id}" method="post">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     <input type="submit" value="<@spring.message "tour.edit"/>">
                 </form>
 
@@ -70,6 +73,7 @@
         </td>
         <td><#if userRole == "ROLE_ADMIN">
             <form action="/admin/tour/delete/${tour.id}" method="post">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 <input type="submit" value="<@spring.message "tour.delete"/>">
             </form>
 

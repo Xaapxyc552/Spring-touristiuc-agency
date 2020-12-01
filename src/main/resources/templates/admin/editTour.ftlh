@@ -3,6 +3,7 @@
 <@commonMacro.headerMacro/>
 
 <form action="/admin/tour/save" method="post" name="tourDTO" id="tourDTO">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     <table>
         <@spring.formHiddenInput "tourDTO.id"/>
 
