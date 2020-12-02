@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import ua.skidchenko.touristic_agency.entity.Check;
-import ua.skidchenko.touristic_agency.service.BookingService;
-import ua.skidchenko.touristic_agency.service.TourService;
+import ua.skidchenko.touristic_agency.exceptions.NotPresentInDatabaseException;
+import ua.skidchenko.touristic_agency.service.client_services.ManagerBookingService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,15 +24,10 @@ public class ManagerController {
     private static final String ATTRIBUTE_TO_PASS_IF_CONFIRMED = "message";
 
     final
-    BookingService bookingService;
+    ManagerBookingService bookingService;
 
-    final
-    TourService tourService;// TODO нужно ли использовать тут DI? В смысле использовать
-                            // интерфейся сотдельными методами для менеджера (юзера, админа)
-
-    public ManagerController(BookingService bookingService, TourService tourService) {
+    public ManagerController(ManagerBookingService bookingService) {
         this.bookingService = bookingService;
-        this.tourService = tourService;
     }
 
     @GetMapping("/tours-operations/{page}")
@@ -81,5 +76,15 @@ public class ManagerController {
         model.addAttribute("href", "/manager/tours-operations/1");
         model.addAttribute("hrefDescription", "response.message.go_to_manager_page");
         return "singleMessagePage";
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({IllegalArgumentException.class,
+            NotPresentInDatabaseException.class,})
+    public String handleException(Model model, RuntimeException ex) {
+        log.warn("Handling exception in ManagerController. Exception: " + ex.getMessage());
+        model.addAttribute("cause", ex.getCause());
+        model.addAttribute("error", ex.getMessage());
+        return "error";
     }
 }

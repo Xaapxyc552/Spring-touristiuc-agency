@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import ua.skidchenko.touristic_agency.entity.Check;
 import ua.skidchenko.touristic_agency.entity.User;
 import ua.skidchenko.touristic_agency.exceptions.NotPresentInDatabaseException;
-import ua.skidchenko.touristic_agency.service.BookingService;
+import ua.skidchenko.touristic_agency.service.client_services.UserBookingService;
 import ua.skidchenko.touristic_agency.service.UserService;
 
 import java.security.Principal;
@@ -28,10 +28,10 @@ public class UserController {
     UserService userService;
 
     final
-    BookingService bookingService;
+    UserBookingService bookingService;
 
     public UserController(UserService userService,
-                          BookingService bookingService) {
+                          UserBookingService bookingService) {
         this.userService = userService;
         this.bookingService = bookingService;
     }
@@ -44,7 +44,7 @@ public class UserController {
                                       @PathVariable(name = "page") int page,
                                       Model model) {
         String username = principal.getName();
-        User userFromDatabase = userService.getUserByUsername(username);
+        User userFromDatabase = userService.getUserByUsername(username);                            //TODO User (сущность) в контроллере. можно ли так делать? или юзать ДТО?
         log.info("Retrieving user information to display at personal-account page. Username: " + username);
         Page<Check> userChecks = bookingService
                 .findAllChecksByUsernameOrderByStatus(principal.getName(), page - 1);
@@ -79,9 +79,8 @@ public class UserController {
             UsernameNotFoundException.class})
     public String handleException(Model model, RuntimeException ex) {
         log.warn("Handling exception. Exception: " + ex.getMessage());
-        model.addAttribute("cause", ex.getCause());
-        model.addAttribute("message", ex.getMessage());
-        return "singleMessagePage";
+        model.addAttribute("error", ex.getMessage());
+        return "error";
     }
 
 }

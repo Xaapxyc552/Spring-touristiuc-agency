@@ -23,58 +23,52 @@ import java.util.stream.Collectors;
 
 @Controller
 @Log4j2
-@RequestMapping("/main")
-public class MainPageController {
-
-    final
-    TourService tourService;
+@RequestMapping("/signup")
+public class SignUpController {
 
     final
     UserService userService;
 
-    public MainPageController(TourService tourService, UserService userService) {
-        this.tourService = tourService;
+    public SignUpController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping("")
-    public String main() {
-        return "redirect:/tours/list/1";
-    }
-
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/new")
+    @GetMapping("")
     public String newUserPage() {
         log.info("User register page was visited.");
         return "registrationPage";
     }
 
-    @PostMapping("/new")
+    @PostMapping("")
     public String createNewUser(@Valid UserDTO userDTO,
-                                                BindingResult bindingResult) {
+                                BindingResult bindingResult) {
+        checkValidationErrorsElseException(userDTO, bindingResult);
+        log.info("Saving into DB new user. User data: " + userDTO.toString());
+        userService.saveUser(userDTO);
+        return "redirect:/signup/confirm";
+    }
+
+    private void checkValidationErrorsElseException(UserDTO userDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.warn("Exception during validation of UserDTO" + userDTO.toString());
             throw new WrongFormInputDataException("Entered incorrect data.",
                     getValidationErrors(bindingResult));
         }
-        log.info("Saving into DB new user. User data: " + userDTO.toString());
-        userService.saveUser(userDTO);
-        return "redirect:/main/new/confirm";
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/new/confirm")
-    public String confirmCreatingOfUser(Model model) {
+    @GetMapping("/confirm")
+    public String userSuccessfullyRegistered(Model model) {
         log.info("Redirected to PRG-page.");
         model.addAttribute("message","user.registered");
         model.addAttribute("href","/main/new");
         model.addAttribute("hrefDescription","user.registered.href_description");
-        return "registrationPage";
+        return "singleMessagePage";
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({WrongFormInputDataException.class,
-            UsernameNotFoundException.class,
+    @ExceptionHandler({UsernameNotFoundException.class,
             UsernameExistsExcetion.class})
     public String handleOtherExceptions(RuntimeException exception, Model model) {
         log.warn("Handling exception: " + exception.getMessage());
@@ -87,7 +81,7 @@ public class MainPageController {
     public String handleValidationExceptions(WrongFormInputDataException exception, Model model) {
         log.warn("Handling exception: " + exception.getErrors());
         model.addAttribute("errors", exception.getErrors());
-        return "errors";
+        return "validationErrors";
     }
 
 

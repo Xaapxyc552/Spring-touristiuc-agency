@@ -1,6 +1,5 @@
 package ua.skidchenko.touristic_agency.service.impl;
 
-
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -18,16 +17,16 @@ import ua.skidchenko.touristic_agency.exceptions.NotPresentInDatabaseException;
 import ua.skidchenko.touristic_agency.repository.CheckRepository;
 import ua.skidchenko.touristic_agency.repository.TourRepository;
 import ua.skidchenko.touristic_agency.repository.UserRepository;
-import ua.skidchenko.touristic_agency.service.BookingService;
+import ua.skidchenko.touristic_agency.service.client_services.UserBookingService;
 
 import java.util.Collections;
 
 @Service
 @Log4j2
-public class BookingServiceImpl implements BookingService {
+public class UserBookingServiceImpl implements UserBookingService {
 
     @Value("${page.size}")
-    int pageSize;
+    private int pageSize;
 
     final
     TourRepository tourRepository;
@@ -38,12 +37,12 @@ public class BookingServiceImpl implements BookingService {
     final
     CheckRepository checkRepository;
 
-    public BookingServiceImpl(TourRepository tourRepository,
-                              UserRepository userRepository,
-                              CheckRepository checkPerository) {
+    public UserBookingServiceImpl(TourRepository tourRepository,
+                                  UserRepository userRepository,
+                                  CheckRepository checkRepository) {
         this.tourRepository = tourRepository;
         this.userRepository = userRepository;
-        this.checkRepository = checkPerository;
+        this.checkRepository = checkRepository;
     }
 
     @Override
@@ -86,7 +85,8 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public Boolean cancelBookingByCheckId(Long checkId, String username) {
         log.info("Canceling booking by checkId. Check ID: " + checkId.toString());
-        Check checkFromDB = getCheckFromRepositoryById(checkId);
+        Check checkFromDB = getCheckFromRepositoryByIdAndStatus(checkId,
+                CheckStatus.getInstanceByEnum(CheckStatus.Status.WAITING_FOR_CONFIRM));
         User userFromDB = checkFromDB.getUser();
         if (!userFromDB.getUsername().equals(username)) {
             throw new ForbiddenOperationExceprtion("Username of check's owner not equals to your.");
@@ -102,45 +102,6 @@ public class BookingServiceImpl implements BookingService {
         return Boolean.TRUE;
     }
 
-    @Override
-    @Transactional
-    public Boolean declineBooking(Long checkId) {
-        log.info("Canceling booking by checkId. Check ID: " + checkId.toString());
-        Check checkToDecline = getCheckFromRepositoryById(checkId);
-        User user = checkToDecline.getUser();
-        Tour tourToDecline = checkToDecline.getTour();
-
-        user.setMoney(user.getMoney() + checkToDecline.getTotalPrice());
-        tourToDecline.setTourStatus(TourStatus.WAITING);
-        checkToDecline.setStatus(CheckStatus.getInstanceByEnum(CheckStatus.Status.DECLINED));
-        checkRepository.save(checkToDecline);
-        return Boolean.TRUE;
-    }
-
-    @Override
-    @Transactional
-    public Boolean confirmBooking(Long checkId) {
-        Check checkToConfirm = getCheckFromRepositoryById(checkId);
-        Tour tourToConfirm = checkToConfirm.getTour();
-
-        tourToConfirm.setTourStatus(TourStatus.SOLD);
-        checkToConfirm.setStatus(CheckStatus.getInstanceByEnum(CheckStatus.Status.CONFIRMED));
-        checkRepository.save(checkToConfirm);
-        return Boolean.TRUE;
-    }
-
-    @Override
-    public Page<Check> getPagedWaitingChecks(int currentPage) {
-        log.info("Starting retrieving waiting checks from DB.");
-        PageRequest pr = PageRequest.of(currentPage, pageSize);
-        CheckStatus instanceByEnum = CheckStatus.getInstanceByEnum(CheckStatus.Status.WAITING_FOR_CONFIRM);
-        Page<Check> allByStatus = checkRepository.findAllByStatusIn(
-                Collections.singletonList(instanceByEnum), pr
-        );
-        log.info("Checks from DB: " + allByStatus.getContent());
-        return allByStatus;
-    }
-
     private Tour getTourFromRepositoryByIdAndStatus(Long tourId, TourStatus status) {
         return tourRepository.findByIdAndTourStatus(tourId, status)
                 .orElseThrow(() -> {
@@ -149,15 +110,6 @@ public class BookingServiceImpl implements BookingService {
                                     "Tour not presented in Database. Tour id: " + tourId);
                         }
                 );
-    }
-
-    private Check getCheckFromRepositoryById(Long checkId) {
-        return checkRepository.findById(checkId).orElseThrow(() -> {
-                    log.warn("Check not presented in Database. Check ID: " + checkId);
-                    return new NotPresentInDatabaseException(
-                            "Check not presented in Database. Check ID: " + checkId);
-                }
-        );
     }
 
     private User getUserFromRepository(String username) {
@@ -170,5 +122,13 @@ public class BookingServiceImpl implements BookingService {
                 );
     }
 
-
+    private Check getCheckFromRepositoryByIdAndStatus(Long checkId, CheckStatus tourStatus) {
+        return checkRepository.findByIdAndStatusIn(checkId, Collections.singletonList(tourStatus))
+                .orElseThrow(() -> {
+                            log.warn("Check not presented in Database. Check ID: " + checkId);
+                            return new NotPresentInDatabaseException(
+                                    "Check not presented in Database. Check ID: " + checkId);
+                        }
+                );
+    }
 }

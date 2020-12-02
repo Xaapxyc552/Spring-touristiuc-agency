@@ -6,8 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ua.skidchenko.touristic_agency.entity.Check;
 import ua.skidchenko.touristic_agency.entity.User;
 import ua.skidchenko.touristic_agency.entity.enums.CheckStatus;
+import ua.skidchenko.touristic_agency.entity.enums.TourStatus;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public interface CheckRepository extends JpaRepository<Check,Long> {
 
@@ -15,4 +17,5 @@ public interface CheckRepository extends JpaRepository<Check,Long> {
 
     Page<Check> findAllByStatus(CheckStatus instanceByEnum, Pageable pageable);
     Page<Check> findAllByStatusIn(Collection<CheckStatus> statuses, Pageable pageable);
+    Optional<Check> findByIdAndStatusIn(Long id, Collection<CheckStatus> statuses);
 }

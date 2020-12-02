@@ -11,6 +11,7 @@ import ua.skidchenko.touristic_agency.entity.Tour;
 import ua.skidchenko.touristic_agency.exceptions.NotPresentInDatabaseException;
 import ua.skidchenko.touristic_agency.service.BookingService;
 import ua.skidchenko.touristic_agency.service.TourService;
+import ua.skidchenko.touristic_agency.service.client_services.UserBookingService;
 
 import java.security.Principal;
 import java.util.List;
@@ -26,9 +27,9 @@ public class TourController {
     TourService tourService;
 
     final
-    BookingService bookingService;
+    UserBookingService bookingService;
 
-    public TourController(TourService tourService, BookingService bookingService) {
+    public TourController(TourService tourService, UserBookingService bookingService) {
         this.tourService = tourService;
         this.bookingService = bookingService;
     }
@@ -79,12 +80,12 @@ public class TourController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({IllegalArgumentException.class,
-            NotPresentInDatabaseException.class,})
+            NotPresentInDatabaseException.class})
     public String handleException(Model model, RuntimeException ex) {
         log.warn("Handling exception in TourController. Exception: " + ex.getMessage());
-                model.addAttribute("cause", ex.getCause());
-        model.addAttribute("message", ex.getLocalizedMessage());
-        return "singleMessagePage";
+        model.addAttribute("cause", ex.getCause());
+        model.addAttribute("error", ex.getMessage());
+        return "error";
     }
 
 }

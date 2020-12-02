@@ -6,7 +6,7 @@
 <h1>
     <@spring.message "form.header"/>
 </h1>
-<form action="/main/new" method="post">
+<form action="/signup" method="post">
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     <h1></h1>
     <table>

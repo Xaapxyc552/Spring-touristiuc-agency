@@ -32,7 +32,7 @@ public class TourServiceImpl implements TourService {
     private static final String PRIMARY_SORTING_PROPERTY = "burning";
 
     @Value("${page.size}")
-    private Integer pageSize;
+    private int pageSize;
 
     final
     TourRepository tourRepository;
@@ -115,7 +115,8 @@ public class TourServiceImpl implements TourService {
     @Transactional
     public Tour updateTourAfterChanges(TourDTO tourDTO) {
         log.info("Updating tour with data from tourDTO: " + tourDTO.toString());
-        Optional<Tour> byId = tourRepository.findById(Long.valueOf(tourDTO.getId()));
+        Optional<Tour> byId = tourRepository.findByIdAndTourStatusIn(Long.valueOf(tourDTO.getId()),
+                Collections.singletonList(TourStatus.WAITING));
         if (!byId.isPresent()) {
             throw new TourNotPresentInDBException("Tour was deleted from DB during editing.");
         }
@@ -131,7 +132,7 @@ public class TourServiceImpl implements TourService {
         Tour tour = tourRepository.findByIdAndTourStatus(tourId, TourStatus.WAITING).orElseThrow(
                 () -> {
                     log.warn("Waiting tour is not present id DB. Tour id: " + tourId);
-                    throw new TourNotPresentInDBException("Waiting tour is not present id DB. Tour id:  + tourId");
+                    throw new TourNotPresentInDBException("Waiting tour is not present id DB. Tour id:" + tourId);
                 }
         );
         tour.setTourStatus(TourStatus.DELETED);
