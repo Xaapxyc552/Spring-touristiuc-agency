@@ -16,6 +16,4 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
     Optional<Tour> findByIdAndTourStatus(Long id, TourStatus status);
 
     Optional<Tour> findByIdAndTourStatusIn(Long id, Collection<TourStatus> statuses);
-
-    boolean existsByIdAndTourStatus(Long id, Collection<TourStatus> statuses);
 }

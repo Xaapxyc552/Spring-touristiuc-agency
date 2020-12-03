@@ -16,7 +16,7 @@
         <option value="DESC"><@spring.message "tour.form.direction.desc"/></option>
         <option value="ASC"><@spring.message "tour.form.direction.asc"/></option>
     </select>
-    <input type="submit" value="Submit">
+    <input type="submit" value="<@spring.message "tour.form.direction.submit"/>">
 </form>
 
 <@commonMacro.pagingMacro pagesSequence=pagesSequence currentPage=currentPage  href="/tours/list/"/>

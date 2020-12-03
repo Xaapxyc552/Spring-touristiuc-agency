@@ -1,15 +1,18 @@
 <#import "/spring.ftl" as spring/>
 <#macro headerMacro>
     <table border="3">
-        <form action="/locale/" method="get">
-            <th>
-                <select name="lang" id="lang">
-                    <option value="en-GB">English</option>
-                    <option value="uk-UA">Українська</option>
-                </select>
-                <input type="submit" value="Select">
-            </th>
-        </form>
+        <tr>
+            <td>
+                <form action="/locale/" method="get">
+                    <input type="hidden" id="lang" name="lang" value="en-GB">
+                    <input type="submit" value="English">
+                </form>
+                <form action="/locale/" method="get">
+                    <input type="hidden" id="lang" name="lang" value="uk-UA">
+                    <input type="submit" value="Українська">
+                </form>
+            </td>
+        </tr>
         <tr>
             <td> <#if (userRole == "ROLE_ANONYMOUS")>
                     <a href="/login"><@spring.message "common.head.login"/></a>
