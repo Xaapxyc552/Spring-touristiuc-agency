@@ -18,8 +18,7 @@ public class PutUserInfoIntoModelInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest aRequest, HttpServletResponse aResponse, Object aHandler, ModelAndView aModelAndView) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Optional<? extends GrantedAuthority> userRole = authentication
-                .getAuthorities()
+        Optional<? extends GrantedAuthority> userRole = authentication.getAuthorities()
                 .stream()
                 .findFirst();
         String username = authentication.getName();

@@ -44,7 +44,7 @@ public class UserController {
                                       @PathVariable(name = "page") int page,
                                       Model model) {
         String username = principal.getName();
-        User userFromDatabase = userService.getUserByUsername(username);                            //TODO User (сущность) в контроллере. можно ли так делать? или юзать ДТО?
+        User userFromDatabase = userService.getUserByUsername(username);      //TODO User (сущность) в контроллере. можно ли так делать? или юзать ДТО?
         log.info("Retrieving user information to display at personal-account page. Username: " + username);
         Page<Check> userChecks = bookingService
                 .findAllChecksByUsernameOrderByStatus(principal.getName(), page - 1);

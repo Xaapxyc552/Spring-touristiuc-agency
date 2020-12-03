@@ -45,7 +45,7 @@ public class TourController {
                 order, direction, currentPage - 1
         );
         List<Integer> pagesSequence = IntStream
-                .rangeClosed(1, orderedToursPage.getTotalPages())
+                .rangeClosed( /*TODO начальная страница (убирать литералы)*/1, orderedToursPage.getTotalPages())
                 .boxed()
                 .collect(Collectors.toList());
         model.addAttribute("tours", orderedToursPage.getContent());

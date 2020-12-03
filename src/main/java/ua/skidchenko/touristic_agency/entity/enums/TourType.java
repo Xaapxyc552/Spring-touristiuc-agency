@@ -57,9 +57,7 @@ public class TourType {
 
     public static List<TourType> getTourTypesFromStringList(List<String> list) {
         return list.stream().
-                map(el -> TourType.getInstanceByType(
-                        Enum.valueOf(TourType.Type.class, el))
-                )
+                map(el -> TourType.getInstanceByType(Enum.valueOf(TourType.Type.class, el)))
                 .collect(Collectors.toList());
     }
 }

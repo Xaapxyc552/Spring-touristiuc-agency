@@ -13,13 +13,9 @@ import java.util.Optional;
 
 public interface TourRepository extends JpaRepository<Tour, Long> {
 
-    Page<Tour> findAllByTourStatus(TourStatus tourStatus,Pageable pageable);
+    Optional<Tour> findByIdAndTourStatus(Long id, TourStatus status);
 
-    Optional<Tour> findByIdAndTourStatus(Long aLong, TourStatus status);
     Optional<Tour> findByIdAndTourStatusIn(Long id, Collection<TourStatus> statuses);
 
-    @NotNull
-    @Override
-    <S extends Tour> Page<S> findAll(@NotNull Example<S> example, @NotNull Pageable pageable);
-
+    boolean existsByIdAndTourStatus(Long id, Collection<TourStatus> statuses);
 }

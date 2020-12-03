@@ -14,8 +14,9 @@ import java.util.Optional;
 public interface CheckRepository extends JpaRepository<Check,Long> {
 
     <S extends Check> Page<S> findAllByUserOrderByStatus(User user, Pageable pageable);
-
-    Page<Check> findAllByStatus(CheckStatus instanceByEnum, Pageable pageable);
+    //TODO так ли должна быть пагинация?
     Page<Check> findAllByStatusIn(Collection<CheckStatus> statuses, Pageable pageable);
+
     Optional<Check> findByIdAndStatusIn(Long id, Collection<CheckStatus> statuses);
+
 }

@@ -49,9 +49,7 @@ public class ManagerBookingServiceImpl implements ManagerBookingService {
         log.info("Starting retrieving waiting checks from DB.");
         PageRequest pr = PageRequest.of(currentPage, pageSize);
         CheckStatus instanceByEnum = CheckStatus.getInstanceByEnum(CheckStatus.Status.WAITING_FOR_CONFIRM);
-        Page<Check> allByStatus = checkRepository.findAllByStatusIn(
-                Collections.singletonList(instanceByEnum), pr
-        );
+        Page<Check> allByStatus = checkRepository.findAllByStatusIn(Collections.singletonList(instanceByEnum), pr);
         log.info("Checks from DB: " + allByStatus.getContent());
         return allByStatus;
     }
@@ -62,11 +60,9 @@ public class ManagerBookingServiceImpl implements ManagerBookingService {
         log.info("Canceling booking by checkId. Check ID: " + checkId.toString());
         Check checkToDecline = getCheckFromRepositoryByIdAndStatus(checkId,
                 CheckStatus.getInstanceByEnum(CheckStatus.Status.WAITING_FOR_CONFIRM));
-        User checkOwner = checkToDecline.getUser();
-        Tour tourToDecline = checkToDecline.getTour();
-
-        checkOwner.setMoney(checkOwner.getMoney() + checkToDecline.getTotalPrice());
-        tourToDecline.setTourStatus(TourStatus.WAITING);
+        // TODO поудалять лишние переменные
+        checkToDecline.getUser().setMoney(checkToDecline.getUser().getMoney() + checkToDecline.getTotalPrice());
+        checkToDecline.getTour().setTourStatus(TourStatus.WAITING);
         checkToDecline.setStatus(CheckStatus.getInstanceByEnum(CheckStatus.Status.DECLINED));
         checkRepository.save(checkToDecline);
         return Boolean.TRUE;

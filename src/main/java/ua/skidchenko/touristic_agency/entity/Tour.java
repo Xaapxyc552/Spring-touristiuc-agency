@@ -22,8 +22,11 @@ public class Tour {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+  //TODO
+//    @Column(name = "name_ua",nullable = false, length = 50, unique = true)
+//    private String nameUA;
 
-    @Column(nullable = false, length = 50, unique = true)
+    @Column(name = "name",nullable = false, length = 50, unique = true)
     private String name;
 
     @Column(nullable = false, length = 300)
