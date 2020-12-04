@@ -54,7 +54,7 @@ public class OnStartupDatabaseFiller implements CommandLineRunner {
         User admin = userService.saveUser(build1);
         User manager = userService.saveUser(build2);
 
-        user.setMoney(2000L);
+        user.setMoney(200000L);
         admin.setRole(Role.ROLE_ADMIN);
         manager.setRole(Role.ROLE_MANAGER);
 
@@ -80,7 +80,7 @@ public class OnStartupDatabaseFiller implements CommandLineRunner {
                 .burning(true)
                 .description("tourdesc")
                 .hotelType(HotelType.FOUR_STAR)
-                .price(150L)
+                .price(150000L)
                 .name("name2")
                 .tourStatus(TourStatus.WAITING)
                 .tourTypes(Collections.singletonList(
@@ -93,7 +93,7 @@ public class OnStartupDatabaseFiller implements CommandLineRunner {
                 .burning(false)
                 .description("tourdesc")
                 .hotelType(HotelType.TWO_STAR)
-                .price(4000L)
+                .price(40000L)
                 .name("name3")
                 .tourStatus(TourStatus.WAITING)
                 .tourTypes(Collections.singletonList(
@@ -106,7 +106,7 @@ public class OnStartupDatabaseFiller implements CommandLineRunner {
                 .burning(false)
                 .description("tourdesc")
                 .hotelType(HotelType.TWO_STAR)
-                .price(800L)
+                .price(80000L)
                 .name("name4")
                 .tourStatus(TourStatus.WAITING)
                 .tourTypes(Arrays.asList(
@@ -118,7 +118,7 @@ public class OnStartupDatabaseFiller implements CommandLineRunner {
                 .burning(true)
                 .description("tourdesc")
                 .hotelType(HotelType.FOUR_STAR)
-                .price(300L)
+                .price(300000L)
                 .name("name5")
                 .tourStatus(TourStatus.WAITING)
                 .tourTypes(Collections.singletonList(
@@ -130,7 +130,7 @@ public class OnStartupDatabaseFiller implements CommandLineRunner {
                 .burning(true)
                 .description("tourdesc")
                 .hotelType(HotelType.THREE_STAR)
-                .price(600L)
+                .price(60000L)
                 .name("name6")
                 .tourStatus(TourStatus.WAITING)
                 .tourTypes(Collections.singletonList(
@@ -142,7 +142,7 @@ public class OnStartupDatabaseFiller implements CommandLineRunner {
                 .burning(true)
                 .description("tourdesc")
                 .hotelType(HotelType.THREE_STAR)
-                .price(1200L)
+                .price(120000L)
                 .name("name7")
                 .tourStatus(TourStatus.WAITING)
                 .tourTypes(Collections.singletonList(
@@ -154,7 +154,7 @@ public class OnStartupDatabaseFiller implements CommandLineRunner {
                 .burning(true)
                 .description("tourdesc")
                 .hotelType(HotelType.ONE_STAR)
-                .price(500L)
+                .price(50000L)
                 .name("name8")
                 .tourStatus(TourStatus.WAITING)
                 .tourTypes(Arrays.asList(

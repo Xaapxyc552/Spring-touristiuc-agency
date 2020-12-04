@@ -25,7 +25,7 @@
     <#list tours as tour><#--TODO нужно ли выделение горящих туров?-->
         <tr <#if tour.burning> style="color:#ff0000" </#if>>
             <td><@spring.message "tour.burning"/></td>
-            <td>${tour.burning?c}</td>
+            <td><@spring.message "tour.burning.${tour.burning?c}"/></td>
         </tr>
         <tr <#if tour.burning> style="color:#ff0000" </#if>>
             <td><@spring.message "tour.name"/></td>
@@ -35,13 +35,15 @@
             <td><@spring.message "tour.tour_type"/></td>
             <td>
                 <#list tour.tourTypes as tourType>
-                    ${tourType.type.name()}<br>
+                    <@spring.message "tour.tour_type.${tourType.type.name()}"/><br>
                 </#list>
             </td>
         </tr>
         <tr>
             <td><@spring.message "tour.price"/></td>
-            <td>${tour.price}</td>
+            <td>
+                <@commonMacro.showMoneyByLocale tour.price "${requestContext.locale}" dollarCourse/>
+            </td>
         </tr>
         <tr>
             <td><@spring.message "tour.hotel_type"/></td>

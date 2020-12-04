@@ -54,7 +54,7 @@
             <#list pagesSequence as pageNumber>
                 <td>
                     <#if pageNumber!=currentPage>
-                        <a href=${href+"${pageNumber}"}>   ${pageNumber}   </a>
+                        <a href=${href+"${pageNumber}"}> ${pageNumber} </a>
                     <#else>${pageNumber}
                     </#if>
                 </td>
@@ -62,3 +62,12 @@
         </tr>
     </table>
 </#macro>
+
+<#macro showMoneyByLocale hrivnas locale dollarCourse>
+    <#if locale=="uk_UA">
+        ${hrivnas/100} <@spring.message "money.sign"/>
+    <#else>
+        ${hrivnas/dollarCourse/100} <@spring.message "money.sign"/>
+    </#if>
+</#macro>
+

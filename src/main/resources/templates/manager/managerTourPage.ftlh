@@ -20,11 +20,13 @@
         </tr>
         <tr>
             <th><@spring.message "check.total_price"/></th>
-            <th>${check.totalPrice}</th>
+            <th>
+                <@commonMacro.showMoneyByLocale check.totalPrice "${requestContext.locale}" dollarCourse/>
+            </th>
         </tr>
         <tr>
             <th><@spring.message "check.status"/></th>
-            <th>${check.status.status}</th>
+            <th><@spring.message "check.status.${check.status.status}"/></th>
         </tr>
         <#if check.status.status.name()="WAITING_FOR_CONFIRM">
             <tr>

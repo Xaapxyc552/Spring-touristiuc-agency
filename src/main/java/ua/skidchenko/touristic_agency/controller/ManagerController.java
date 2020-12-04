@@ -1,6 +1,7 @@
 package ua.skidchenko.touristic_agency.controller;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,9 @@ import java.util.stream.IntStream;
 @Controller
 @RequestMapping("/manager")
 public class ManagerController {
+
+    @Value("${dollar.course}")
+    private Double dollarCourse;
 
     private static final String ATTRIBUTE_TO_PASS_IF_CONFIRMED = "message";
 
@@ -42,6 +46,7 @@ public class ManagerController {
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("waitingChecks", pagedWaitingChecks.getContent());
         model.addAttribute("pagesSequence", pagesSequence);
+        model.addAttribute("dollarCourse", dollarCourse);
         return "manager/managerTourPage";
     }
 

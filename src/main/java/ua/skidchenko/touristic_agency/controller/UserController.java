@@ -2,6 +2,7 @@ package ua.skidchenko.touristic_agency.controller;
 
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,6 +25,11 @@ import java.util.stream.IntStream;
 @RequestMapping("/user")
 public class UserController {
 
+    @Value("${dollar.course}")
+    private Double dollarCourse;
+
+    private static final int AMOUNT_OF_KOPECKS_IS_HRYVNA = 100;
+
     final
     UserService userService;
 
@@ -36,7 +42,7 @@ public class UserController {
         this.bookingService = bookingService;
     }
 
-    //прописать тайминги логированием
+    //TODO прописать тайминги логированием
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/personal-account/{page}")
@@ -58,16 +64,23 @@ public class UserController {
         model.addAttribute("userChecks", userChecks.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("pagesSequence", pagesSequence);
+        model.addAttribute("dollarCourse", dollarCourse);
+
         return "personalAccount";
     }
 
     @PostMapping("/recharge")
     public String rechargeUserWallet(@RequestParam(name = "amountOfCharge") Long amountOfCharge,
-                                     Principal principal) {
+                                     Principal principal,
+                                     @CookieValue(name = "lang")String lang) {
         String username = principal.getName();
+        amountOfCharge*=AMOUNT_OF_KOPECKS_IS_HRYVNA;
         log.info("Starting recharging user`s account. Amount: " + amountOfCharge + ". Username: " + username);
         if (amountOfCharge <= 0) {
             throw new IllegalArgumentException("Amount to charge cannot be zero or negative.");
+        }
+        if(lang.equals("en-GB")){
+            amountOfCharge=(long)(amountOfCharge*dollarCourse);
         }
         userService.chargeUserWallet(amountOfCharge, username);
         return "redirect:/user/personal-account/1";

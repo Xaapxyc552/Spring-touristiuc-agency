@@ -1,12 +1,13 @@
 <#import "spring.ftl" as spring/>
-<#import "macroses/commonMacro.ftlh" as commonMacros>
-<@commonMacros.headerMacro/>
+<#import "macroses/commonMacro.ftlh" as commonMacro>
+<@commonMacro.headerMacro/>
 
 <@spring.message "personal_page.firstname"/>${firstname}<br>
 <@spring.message "personal_page.email"/>${email}<br>
 <@spring.message "personal_page.username"/>${username}<br>
 <@spring.message "personal_page.role"/>${userRole}<br>
-<@spring.message "personal_page.money"/>${money}<br>
+<@spring.message "personal_page.money"/>
+<@commonMacro.showMoneyByLocale money "${requestContext.locale}" dollarCourse/><br>
 <br>
 <form action="/user/recharge" method="post">
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
@@ -16,7 +17,7 @@
 </form>
 
 
-<@commonMacros.pagingMacro pagesSequence=pagesSequence currentPage=currentPage  href="/user/personal-account/"/>
+<@commonMacro.pagingMacro pagesSequence=pagesSequence currentPage=currentPage  href="/user/personal-account/"/>
 
 <table>
     <@spring.message "check.header"/> <br>
@@ -27,11 +28,13 @@
         </tr>
         <tr>
             <th><@spring.message "check.total_price"/></th>
-            <th>${check.totalPrice}</th>
+            <th>
+                <@commonMacro.showMoneyByLocale check.totalPrice "${requestContext.locale}" dollarCourse/>
+            </th>
         </tr>
         <tr>
             <th><@spring.message "check.status"/></th>
-            <th>${check.status.status}</th>
+            <th><@spring.message "check.status.${check.status.status}"/></th>
         </tr>
         <#if check.status.status.name()="WAITING_FOR_CONFIRM">
             <tr>

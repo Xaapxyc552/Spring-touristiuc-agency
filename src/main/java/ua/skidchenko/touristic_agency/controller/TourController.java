@@ -1,6 +1,7 @@
 package ua.skidchenko.touristic_agency.controller;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import ua.skidchenko.touristic_agency.controller.enums.OrderOfTours;
 import ua.skidchenko.touristic_agency.entity.Tour;
 import ua.skidchenko.touristic_agency.exceptions.NotPresentInDatabaseException;
-import ua.skidchenko.touristic_agency.service.BookingService;
 import ua.skidchenko.touristic_agency.service.TourService;
 import ua.skidchenko.touristic_agency.service.client_services.UserBookingService;
 
@@ -22,6 +22,9 @@ import java.util.stream.IntStream;
 @Log4j2
 @RequestMapping("/tours")
 public class TourController {
+
+    @Value("${dollar.course}")
+    private Double dollarCourse;
 
     final
     TourService tourService;
@@ -51,6 +54,7 @@ public class TourController {
         model.addAttribute("tours", orderedToursPage.getContent());
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("pagesSequence", pagesSequence);
+        model.addAttribute("dollarCourse", dollarCourse);
         return "tours";
     }
 
