@@ -5,6 +5,7 @@ import ua.skidchenko.touristic_agency.entity.enums.HotelType;
 
 import javax.validation.constraints.*;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -19,13 +20,11 @@ public class TourDTO {
 
     @NotNull(message = "Name field null!")
     @NotBlank(message = "Name field blank!")
-    @Size(min = 5, max = 100, message = "Name field not in size 5 - 100.")
-    private String name;
+    private Map<String,String> name;
 
     @NotNull(message = "Description field null!")
     @NotBlank(message = "Description field blank!")
-    @Size(min = 5, max = 1000, message = "Description field not in size 5 - 1000.")
-    private String description;
+    private Map<String,String> description;
 
     @NotNull(message = "Amount of persons field null!")
     @NotBlank(message = "Amount of persons field blank!")

@@ -19,10 +19,7 @@ import ua.skidchenko.touristic_agency.exceptions.TourNotPresentInDBException;
 import ua.skidchenko.touristic_agency.repository.TourRepository;
 import ua.skidchenko.touristic_agency.service.TourService;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service

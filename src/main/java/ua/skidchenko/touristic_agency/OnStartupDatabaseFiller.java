@@ -10,13 +10,15 @@ import ua.skidchenko.touristic_agency.repository.UserRepository;
 import ua.skidchenko.touristic_agency.service.TourService;
 import ua.skidchenko.touristic_agency.service.UserService;
 
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 
 @Log4j2
 //@Component
 public class OnStartupDatabaseFiller implements CommandLineRunner {
 
+    public static final String UK_UA = "uk_UA";
+    public static final String EN_GB = "en_GB";
     final
     UserService userService;
 
@@ -35,133 +37,124 @@ public class OnStartupDatabaseFiller implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        UserDTO build = UserDTO.builder()
-                .email("asdsad@google.com")
-                .firstname("Sanya")
-                .password("password").username("user").build();
+        HashMap<String, String> name = new HashMap<>();
+        name.put(UK_UA,"Українська назва туру 1");
+        name.put(EN_GB,"English name of tour 1");
+        HashMap<String, String> description = new HashMap<>();
+        description.put(UK_UA,"Український опис туру 1");
+        description.put(EN_GB,"English description of tour 1");
 
-        UserDTO build1 = UserDTO.builder()
-                .email("asdasdsad@google.com")
-                .firstname("Sanyaa")
-                .password("password").username("admin").build();
+        Tour newTour = buildNewTour(3,
+                true,
+                name,
+                description,
+                HotelType.FOUR_STAR,
+                20000L,
+                TourStatus.WAITING,
+                TourType.getInstanceByType(TourType.Type.RECREATION));
 
-        UserDTO build2 = UserDTO.builder()
-                .email("asdasdddsad@google.com")
-                .firstname("Sanyaaa")
-                .password("password").username("manager").build();
+        name = new HashMap<>();
+        name.put(UK_UA,"Українська назва туру 2");
+        name.put(EN_GB,"English name of tour 2");
+        description = new HashMap<>();
+        description.put(UK_UA,"Український опис туру 2");
+        description.put(EN_GB,"English description of tour 2");
 
-        User user = userService.saveUser(build);
-        User admin = userService.saveUser(build1);
-        User manager = userService.saveUser(build2);
+        Tour newTour1 = buildNewTour(8,
+                false,
+                name,
+                description,
+                HotelType.FIVE_STAR,
+                40000L,
+                TourStatus.WAITING,
+                TourType.getInstanceByType(TourType.Type.SHOPPING));
+        name = new HashMap<>();
+        name.put(UK_UA,"Українська назва туру 3");
+        name.put(EN_GB,"English name of tour 3");
+        description = new HashMap<>();
+        description.put(UK_UA,"Український опис туру 3");
+        description.put(EN_GB,"English description of tour 3");
+        Tour newTour2 = buildNewTour(1,
+                false,
+                name,
+                description,
+                HotelType.THREE_STAR,
+                25000L,
+                TourStatus.WAITING,
+                TourType.getInstanceByType(TourType.Type.EXCURSION));
+        name = new HashMap<>();
+        name.put(UK_UA,"Українська назва туру 4");
+        name.put(EN_GB,"English name of tour 4");
+        description = new HashMap<>();
+        description.put(UK_UA,"Український опис туру 4");
+        description.put(EN_GB,"English description of tour 4");
+        Tour newTour3 = buildNewTour(2,
+                false,
+                name,
+                description,
+                HotelType.ONE_STAR,
+                42000L,
+                TourStatus.WAITING,
+                TourType.getInstanceByType(TourType.Type.RECREATION));
+        name = new HashMap<>();
+        name.put(UK_UA,"Українська назва туру 5");
+        name.put(EN_GB,"English name of tour 5");
+        description = new HashMap<>();
+        description.put(UK_UA,"Український опис туру 5");
+        description.put(EN_GB,"English description of tour 5");
+        Tour newTour4 = buildNewTour(5,
+                true,
+                name,
+                description,
+                HotelType.THREE_STAR,
+                20000L,
+                TourStatus.WAITING,
+                TourType.getInstanceByType(TourType.Type.SHOPPING));
+        name = new HashMap<>();
+        name.put(UK_UA,"Українська назва туру 6");
+        name.put(EN_GB,"English name of tour 6");
+        description = new HashMap<>();
+        description.put(UK_UA,"Український опис туру 6");
+        description.put(EN_GB,"English description of tour 6");
+        Tour newTour5 = buildNewTour(4,
+                false,
+                name,
+                description,
+                HotelType.TWO_STAR,
+                38200L,
+                TourStatus.WAITING,
+                TourType.getInstanceByType(TourType.Type.EXCURSION));
 
-        user.setMoney(200000L);
-        admin.setRole(Role.ROLE_ADMIN);
-        manager.setRole(Role.ROLE_MANAGER);
+        name = new HashMap<>();
+        name.put(UK_UA,"Українська назва туру 7");
+        name.put(EN_GB,"English name of tour 7");
+        description = new HashMap<>();
+        description.put(UK_UA,"Український опис туру 7");
+        description.put(EN_GB,"English description of tour 7");
+        Tour newTour6 = buildNewTour(5,
+                false,
+                name,
+                description,
+                HotelType.FOUR_STAR,
+                43250L,
+                TourStatus.WAITING,
+                TourType.getInstanceByType(TourType.Type.RECREATION));
 
-        userRepository.save(admin);
-        userRepository.save(manager);
-        userRepository.save(user);
+        name = new HashMap<>();
+        name.put(UK_UA,"Українська назва туру 8");
+        name.put(EN_GB,"English name of tour 8");
+        description = new HashMap<>();
+        description.put(UK_UA,"Український опис туру 8");
+        description.put(EN_GB,"English description of tour 8");
+        Tour newTour7 = buildNewTour(3,
+                false,
+                name,
+                description,
+                HotelType.FIVE_STAR,
+                82200L,
+                TourStatus.WAITING,
+                TourType.getInstanceByType(TourType.Type.RECREATION));
 
-        Tour newTour = Tour.builder()
-                .amountOfPersons(5)
-                .burning(false)
-                .description("tourdesc")
-                .hotelType(HotelType.FIVE_STAR)
-                .price(200L)
-                .name("name1")
-                .tourStatus(TourStatus.WAITING)
-                .tourTypes(Collections.singletonList(
-                        TourType.getInstanceByType(TourType.Type.RECREATION))
-                )
-                .build();
-
-        Tour newTour1 = Tour.builder()
-                .amountOfPersons(3)
-                .burning(true)
-                .description("tourdesc")
-                .hotelType(HotelType.FOUR_STAR)
-                .price(150000L)
-                .name("name2")
-                .tourStatus(TourStatus.WAITING)
-                .tourTypes(Collections.singletonList(
-                        TourType.getInstanceByType(TourType.Type.RECREATION))
-                )
-                .build();
-
-        Tour newTour2 = Tour.builder()
-                .amountOfPersons(1)
-                .burning(false)
-                .description("tourdesc")
-                .hotelType(HotelType.TWO_STAR)
-                .price(40000L)
-                .name("name3")
-                .tourStatus(TourStatus.WAITING)
-                .tourTypes(Collections.singletonList(
-                        TourType.getInstanceByType(TourType.Type.RECREATION))
-                )
-                .build();
-
-        Tour newTour3 = Tour.builder()
-                .amountOfPersons(3)
-                .burning(false)
-                .description("tourdesc")
-                .hotelType(HotelType.TWO_STAR)
-                .price(80000L)
-                .name("name4")
-                .tourStatus(TourStatus.WAITING)
-                .tourTypes(Arrays.asList(
-                        TourType.getInstanceByType(TourType.Type.RECREATION),
-                        TourType.getInstanceByType(TourType.Type.SHOPPING)))
-                .build();
-        Tour newTour4 = Tour.builder()
-                .amountOfPersons(8)
-                .burning(true)
-                .description("tourdesc")
-                .hotelType(HotelType.FOUR_STAR)
-                .price(300000L)
-                .name("name5")
-                .tourStatus(TourStatus.WAITING)
-                .tourTypes(Collections.singletonList(
-                        TourType.getInstanceByType(TourType.Type.EXCURSION))
-                )
-                .build();
-        Tour newTour5 = Tour.builder()
-                .amountOfPersons(2)
-                .burning(true)
-                .description("tourdesc")
-                .hotelType(HotelType.THREE_STAR)
-                .price(60000L)
-                .name("name6")
-                .tourStatus(TourStatus.WAITING)
-                .tourTypes(Collections.singletonList(
-                        TourType.getInstanceByType(TourType.Type.SHOPPING))
-                )
-                .build();
-        Tour newTour6 = Tour.builder()
-                .amountOfPersons(5)
-                .burning(true)
-                .description("tourdesc")
-                .hotelType(HotelType.THREE_STAR)
-                .price(120000L)
-                .name("name7")
-                .tourStatus(TourStatus.WAITING)
-                .tourTypes(Collections.singletonList(
-                        TourType.getInstanceByType(TourType.Type.RECREATION))
-                )
-                .build();
-        Tour newTour7 = Tour.builder()
-                .amountOfPersons(4)
-                .burning(true)
-                .description("tourdesc")
-                .hotelType(HotelType.ONE_STAR)
-                .price(50000L)
-                .name("name8")
-                .tourStatus(TourStatus.WAITING)
-                .tourTypes(Arrays.asList(
-                        TourType.getInstanceByType(TourType.Type.RECREATION),
-                        TourType.getInstanceByType(TourType.Type.EXCURSION),
-                        TourType.getInstanceByType(TourType.Type.SHOPPING)))
-                .build();
 
         log.info(tourService.saveTourToDB(newTour));
         log.info(tourService.saveTourToDB(newTour1));
@@ -171,5 +164,24 @@ public class OnStartupDatabaseFiller implements CommandLineRunner {
         log.info(tourService.saveTourToDB(newTour5));
         log.info(tourService.saveTourToDB(newTour6));
         log.info(tourService.saveTourToDB(newTour7));
+    }
+
+    private Tour buildNewTour(int amountOfPersons,
+                              boolean burning,
+                              HashMap<String, String> name,
+                              HashMap<String, String> description,
+                              HotelType hotelType,
+                              long price,
+                              TourStatus tourStatus,
+                              TourType tourType) {
+        return Tour.builder().tourStatus(tourStatus)
+                .amountOfPersons(amountOfPersons)
+                .description(description)
+                .hotelType(hotelType)
+                .price(price)
+                .tourTypes(Collections.singletonList(tourType))
+                .burning(burning)
+                .name(name)
+                .build();
     }
 }

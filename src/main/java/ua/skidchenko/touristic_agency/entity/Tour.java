@@ -7,12 +7,13 @@ import ua.skidchenko.touristic_agency.entity.enums.TourType;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"description","tourTypes"})
+@ToString(exclude = {"description", "tourTypes"})
 @EqualsAndHashCode
 
 @Entity
@@ -22,15 +23,20 @@ public class Tour {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-  //TODO
-//    @Column(name = "name_ua",nullable = false, length = 50, unique = true)
-//    private String nameUA;
 
-    @Column(name = "name",nullable = false, length = 50, unique = true)
-    private String name;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "name_translation_mapping",
+            joinColumns = {@JoinColumn(name = "name_id", referencedColumnName = "id")})
+    @MapKeyColumn(name = "lang_code")
+    @Column(name = "name")
+    private Map<String, String> name;
 
-    @Column(nullable = false, length = 300)
-    private String description;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "description_translation_mapping",
+            joinColumns = {@JoinColumn(name = "tour_id", referencedColumnName = "id")})
+    @MapKeyColumn(name = "lang_code")
+    @Column(name = "description")
+    private Map<String, String> description;
 
     @Column(nullable = false)
     private boolean burning;
