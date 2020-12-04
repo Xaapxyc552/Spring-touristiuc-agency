@@ -8,11 +8,6 @@
         <@spring.formHiddenInput "tourDTO.id"/>
 
         <tr>
-            <td><label for="name"><@spring.message "tour.form.name"/></label><br>
-                <@spring.formInput "tourDTO.name"/>
-            </td>
-        </tr>
-        <tr>
             <td><label for="burning"><@spring.message "tour.form.burning"/></label><br>
                 <@spring.formSingleSelect "tourDTO.burning"
                 {"true":"Yes","false":"No"}
@@ -20,8 +15,23 @@
             </td>
         </tr>
         <tr>
-            <td><label for="description"><@spring.message "tour.form.description"/></label><br>
-                <@spring.formTextarea "tourDTO.description" 'rows="10" cols="30"'/>
+            <td><label for="name"><@spring.message "tour.form.name.ukrainian"/></label><br>
+                <@spring.formInput "tourDTO.name[uk_UA]"/>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="name"><@spring.message "tour.form.name.english"/></label><br>
+                <@spring.formInput "tourDTO.name[en_GB]"/>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="description"><@spring.message "tour.form.description.ukrainian"/></label><br>
+                <@spring.formTextarea "tourDTO.description[uk_UA]" 'rows="10" cols="30"'/>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="description"><@spring.message "tour.form.description.english"/></label><br>
+                <@spring.formTextarea "tourDTO.description[en_GB]" 'rows="10" cols="30"'/>
             </td>
         </tr>
         <tr>
