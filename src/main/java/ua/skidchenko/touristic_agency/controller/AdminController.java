@@ -57,7 +57,7 @@ public class AdminController {
 
 
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/tour/edit/{tourId}")
+    @GetMapping("/tour/edit/{tourId}")
     public String getTourByIdToEdit(Model model,
                                     @PathVariable(name = "tourId") Long tourId) {
         log.info("Retrieving tour by tourId from DB to be edited by user. Tour id: " + tourId);

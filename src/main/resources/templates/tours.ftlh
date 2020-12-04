@@ -29,13 +29,19 @@
         </tr>
         <tr>
             <td><@spring.message "tour.name"/></td>
-            <td>${tour.name["uk_UA"]}</td>
-            <td>${tour.name["en_GB"]}</td>
+            <#if "${requestContext.locale}"=="uk_UA">
+                <td>${tour.name["uk_UA"]}</td>
+            <#else>
+                <td>${tour.name["en_GB"]}</td>
+            </#if>
         </tr>
         <tr>
             <td><@spring.message "tour.description"/></td>
-            <td style="width:200px;">${ tour.description["uk_UA"]}</td>
-            <td style="width:200px;">${ tour.description["en_GB"]}</td>
+            <#if "${requestContext.locale}"=="uk_UA">
+                <td style="width:200px;">${ tour.description["uk_UA"]}</td>
+            <#else>
+                <td style="width:200px;">${ tour.description["en_GB"]}</td>
+            </#if>
         </tr>
         <tr>
             <td><@spring.message "tour.tour_type"/></td>
@@ -69,7 +75,7 @@
                     </form>
                 </#if>
                 <#if userRole == "ROLE_ADMIN">
-                    <form action="/admin/tour/edit/${tour.id}" method="post">
+                    <form action="/admin/tour/edit/${tour.id}" method="get">
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                         <input type="submit" value="<@spring.message "tour.edit"/>">
                     </form>

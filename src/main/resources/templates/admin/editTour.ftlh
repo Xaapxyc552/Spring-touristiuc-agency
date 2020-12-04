@@ -15,45 +15,61 @@
             </td>
         </tr>
         <tr>
-            <td><label for="name"><@spring.message "tour.form.name.ukrainian"/></label><br>
+            <td>
+                <label for="name"><@spring.message "tour.form.name.ukrainian"/></label><br>
                 <@spring.formInput "tourDTO.name[uk_UA]"/>
             </td>
-        </tr>
-        <tr>
-            <td><label for="name"><@spring.message "tour.form.name.english"/></label><br>
+            <td>
+                <label for="name"><@spring.message "tour.form.name.english"/></label><br>
                 <@spring.formInput "tourDTO.name[en_GB]"/>
             </td>
         </tr>
         <tr>
-            <td><label for="description"><@spring.message "tour.form.description.ukrainian"/></label><br>
+            <td>
+                <label for="description"><@spring.message "tour.form.description.ukrainian"/></label><br>
                 <@spring.formTextarea "tourDTO.description[uk_UA]" 'rows="10" cols="30"'/>
             </td>
-        </tr>
-        <tr>
-            <td><label for="description"><@spring.message "tour.form.description.english"/></label><br>
+
+            <td>
+                <label for="description"><@spring.message "tour.form.description.english"/></label><br>
                 <@spring.formTextarea "tourDTO.description[en_GB]" 'rows="10" cols="30"'/>
             </td>
         </tr>
         <tr>
-            <td><label for="amountOfPersons"><@spring.message "tour.form.amount_of_person"/></label><br>
+            <td>
+                <label for="amountOfPersons"><@spring.message "tour.form.amount_of_person"/></label><br>
                 <@spring.formInput "tourDTO.amountOfPersons"/>
             </td>
         </tr>
         <tr>
-            <td><label for="price"><@spring.message "tour.form.price"/></label><br>
+            <td>
+                <label for="price"><@spring.message "tour.form.price"/></label><br>
                 <@spring.formInput "tourDTO.price"/>
             </td>
         </tr>
         <tr>
-            <td>
-                <label for="tourTypes"><@spring.message "tour.form.tour_type.header"/></label><br>
-                <@spring.formMultiSelect "tourDTO.tourTypes"
-                {"SHOPPING":"SHOPPING","RECREATION":"RECREATION","EXCURSION":"EXCURSION"}
-                />
-            </td>
+            <#if "${requestContext.locale}"=="uk_UA">
+                <td>
+                    <label for="tourTypes"><@spring.message "tour.form.tour_type.header"/></label><br>
+                    <@spring.formMultiSelect "tourDTO.tourTypes" {
+                    "SHOPPING":"Шопінг",
+                    "RECREATION":"Віпочинок",
+                    "EXCURSION":"Екскурсія"}/>
+                </td>
+            <#else>
+                <td>
+                    <label for="tourTypes"><@spring.message "tour.form.tour_type.header"/></label><br>
+                    <@spring.formMultiSelect "tourDTO.tourTypes" {
+                    "SHOPPING":"Shopping",
+                    "RECREATION":"Recreation",
+                    "EXCURSION":"Exursion"}/>
+                </td>
+            </#if>
+
         </tr>
         <tr>
-            <td><label for="hotelType"><@spring.message "tour.form.hotel_type.header"/></label><br>
+            <td>
+                <label for="hotelType"><@spring.message "tour.form.hotel_type.header"/></label><br>
                 <@spring.formSingleSelect "tourDTO.hotelType"
                 {"ONE_STAR":"*",
                 "TWO_STAR":"**",
