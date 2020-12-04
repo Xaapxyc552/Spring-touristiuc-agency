@@ -18,12 +18,11 @@ public class TourDTO {
 
     private String id;
 
+    //TODO приделать валидацию данных в мапах (своя аннотация валидации)
     @NotNull(message = "Name field null!")
-    @NotBlank(message = "Name field blank!")
     private Map<String,String> name;
 
     @NotNull(message = "Description field null!")
-    @NotBlank(message = "Description field blank!")
     private Map<String,String> description;
 
     @NotNull(message = "Amount of persons field null!")

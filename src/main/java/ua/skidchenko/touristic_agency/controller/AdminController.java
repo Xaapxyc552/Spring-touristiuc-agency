@@ -41,6 +41,7 @@ public class AdminController {
                                     BindingResult bindingResult) {
         checkValidationErrorsElseException(tourDTO, bindingResult);
         log.info("Creating new tour from TourDTO:" + tourDTO.toString());
+//TODO сделать перевод денег в копейки и приделать знак валюты
         tourService.saveNewTour(tourDTO);
         return "redirect:/admin/confirm";
     }

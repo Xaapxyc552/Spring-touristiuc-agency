@@ -23,17 +23,14 @@
 
 <table border="3" style="word-wrap: break-word;" width="500px">
     <#list tours as tour><#--TODO нужно ли выделение горящих туров?-->
-    <tr <#if tour.burning> style="color:#ff0000" </#if>>
-        <td><@spring.message "tour.burning"/></td>
-        <td><@spring.message "tour.burning.${tour.burning?c}"/></td>
-    </tr>
-
-    <td>
+        <tr <#if tour.burning> style="color:#ff0000" </#if>>
+            <td><@spring.message "tour.burning"/></td>
+            <td><@spring.message "tour.burning.${tour.burning?c}"/></td>
+        </tr>
         <tr>
             <td><@spring.message "tour.name"/></td>
             <td>${tour.name["uk_UA"]}</td>
             <td>${tour.name["en_GB"]}</td>
-            <td></td>
         </tr>
         <tr>
             <td><@spring.message "tour.description"/></td>
@@ -87,12 +84,8 @@
 
                 </#if></td>
         </tr>
-        <tr>
-            <th></th>
-            <th></th>
-        </tr>
-        <#else><@spring.message "check.empty_list"/>
-        </#list>
+    <#else><@spring.message "check.empty_list"/>
+    </#list>
 </table>
 </body>
 </html>

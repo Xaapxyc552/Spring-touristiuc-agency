@@ -6,22 +6,34 @@
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     <table>
         <tr>
-            <td><label for="name"><@spring.message "tour.form.name"/></label><br>
-                <input type="text" id="name" name="name">
+            <td>
+                <label for="name"><@spring.message "tour.form.name.ukrainian"/></label><br>
+                <input type="text" id="name" name="name[${"uk_UA"}]">
+            </td>
+            <td>
+                <label for="name"><@spring.message "tour.form.name.english"/></label><br>
+                <input type="text" id="name" name="name[${"en_GB"}]">
             </td>
         </tr>
         <tr>
-            <td><label for="description"><@spring.message "tour.form.description"/></label><br>
-                <textarea name="description" id="description" cols="30" rows="10"></textarea>
+            <td>
+                <label for="description"><@spring.message "tour.form.description.ukrainian"/></label><br>
+                <textarea name="description[${"uk_UA"}]" id="description" cols="30" rows="10"></textarea>
+            </td>
+            <td>
+                <label for="description"><@spring.message "tour.form.description.english"/></label><br>
+                <textarea name="description[${"en_GB"}]" id="description" cols="30" rows="10"></textarea>
             </td>
         </tr>
         <tr>
-            <td><label for="amountOfPersons"><@spring.message "tour.form.amount_of_person"/></label><br>
+            <td>
+                <label for="amountOfPersons"><@spring.message "tour.form.amount_of_person"/></label><br>
                 <input type="number" id="amountOfPersons" name="amountOfPersons">
             </td>
         </tr>
         <tr>
-            <td><label for="price"><@spring.message "tour.form.price"/></label><br>
+            <td>
+                <label for="price"><@spring.message "tour.form.price"/></label><br>
                 <input type="number" id="price" name="price">
             </td>
         </tr>
