@@ -16,7 +16,11 @@
         </tr>
         <tr>
             <th><@spring.message "check.tour_name"/></th>
-            <th>${check.tour.name}</th>
+            <#if "${requestContext.locale}"=="uk_UA">
+                <td>${check.tour.name["uk_UA"]}</td>
+            <#else>
+                <td>${check.tour.name["en_GB"]}</td>
+            </#if>
         </tr>
         <tr>
             <th><@spring.message "check.total_price"/></th>

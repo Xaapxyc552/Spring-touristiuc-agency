@@ -54,7 +54,7 @@
             <#list pagesSequence as pageNumber>
                 <td>
                     <#if pageNumber!=currentPage>
-                        <a href=${href+"${pageNumber}"}> ${pageNumber} </a>
+                        <a href=${href+"${pageNumber}"}>${pageNumber}</a>
                     <#else>${pageNumber}
                     </#if>
                 </td>
