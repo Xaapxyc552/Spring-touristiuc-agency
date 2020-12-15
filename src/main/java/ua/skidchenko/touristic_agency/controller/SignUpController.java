@@ -62,7 +62,7 @@ public class SignUpController {
     public String userSuccessfullyRegistered(Model model) {
         log.info("Redirected to PRG-page.");
         model.addAttribute("message","user.registered");
-        model.addAttribute("href","/main/new");
+        model.addAttribute("href","/signup");
         model.addAttribute("hrefDescription","user.registered.href_description");
         return "singleMessagePage";
     }
