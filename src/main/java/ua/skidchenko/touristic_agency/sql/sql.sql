@@ -83,7 +83,9 @@ create table if not exists touristic_agency."user"
             unique,
     enabled boolean not null,
     firstname varchar(20),
-    money bigint not null,
+    money bigint not null
+        constraint positive_balance
+            check (money >= 0),
     password varchar(60) not null,
     role varchar(255),
     username varchar(30) not null

@@ -14,7 +14,6 @@ import ua.skidchenko.touristic_agency.entity.enums.CheckStatus;
 import ua.skidchenko.touristic_agency.entity.enums.TourStatus;
 import ua.skidchenko.touristic_agency.exceptions.NotPresentInDatabaseException;
 import ua.skidchenko.touristic_agency.repository.CheckRepository;
-import ua.skidchenko.touristic_agency.repository.TourRepository;
 import ua.skidchenko.touristic_agency.repository.UserRepository;
 import ua.skidchenko.touristic_agency.service.client_services.ManagerBookingService;
 
@@ -28,18 +27,13 @@ public class ManagerBookingServiceImpl implements ManagerBookingService {
     private int pageSize;
 
     final
-    TourRepository tourRepository;
-
-    final
     UserRepository userRepository;
 
     final
     CheckRepository checkRepository;
 
-    public ManagerBookingServiceImpl(TourRepository tourRepository,
-                                     UserRepository userRepository,
+    public ManagerBookingServiceImpl(UserRepository userRepository,
                                      CheckRepository checkRepository) {
-        this.tourRepository = tourRepository;
         this.userRepository = userRepository;
         this.checkRepository = checkRepository;
     }
@@ -60,7 +54,6 @@ public class ManagerBookingServiceImpl implements ManagerBookingService {
         log.info("Canceling booking by checkId. Check ID: " + checkId.toString());
         Check checkToDecline = getCheckFromRepositoryByIdAndStatus(checkId,
                 CheckStatus.getInstanceByEnum(CheckStatus.Status.WAITING_FOR_CONFIRM));
-        // TODO поудалять лишние переменные
         checkToDecline.getUser().setMoney(checkToDecline.getUser().getMoney() + checkToDecline.getTotalPrice());
         checkToDecline.getTour().setTourStatus(TourStatus.WAITING);
         checkToDecline.setStatus(CheckStatus.getInstanceByEnum(CheckStatus.Status.DECLINED));

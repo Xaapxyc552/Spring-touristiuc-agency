@@ -19,8 +19,7 @@ public class OnStartupDatabaseFiller implements CommandLineRunner {
 
     public static final String UK_UA = "uk_UA";
     public static final String EN_GB = "en_GB";
-    final
-    UserService userService;
+    final UserService userService;
 
     final
     TourService tourService;

@@ -21,6 +21,7 @@ import ua.skidchenko.touristic_agency.interceptors.PutUserInfoIntoModelIntercept
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @SpringBootApplication
 @EnableTransactionManagement
@@ -67,7 +68,7 @@ public class TouristicAgencyApplication {
     @Bean
     @Qualifier("cacheOfUsersSorts")
     public Map<String, Sort> cacheOfUsersSorts() {
-        return new HashMap<>(10);
+        return new ConcurrentHashMap<>(10);
     }
 
 }

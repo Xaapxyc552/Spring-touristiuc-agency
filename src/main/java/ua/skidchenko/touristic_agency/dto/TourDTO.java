@@ -18,7 +18,6 @@ public class TourDTO {
 
     private String id;
 
-    //TODO приделать валидацию данных в мапах (своя аннотация валидации)
     @NotNull(message = "Name field null!")
     private Map<String,String> name;
 
@@ -32,7 +31,7 @@ public class TourDTO {
 
     @NotNull(message = "Price field null!")
     @NotBlank(message = "Price field blank!")
-    @Pattern(regexp = "^[0-9]*$", message = "Price should be integer positive!")
+    @Pattern(regexp = "^[0-9]+(\\.[0-9]{1,2})?$", message = "Price should be numerical!")
     private String price;
 
     @NotNull(message = "Tour types field null!")

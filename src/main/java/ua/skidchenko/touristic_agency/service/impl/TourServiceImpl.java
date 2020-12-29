@@ -103,7 +103,8 @@ public class TourServiceImpl implements TourService {
                 .hotelType(tour.getHotelType())
                 .tourTypes(
                         tour.getTourTypes().stream()
-                                .map(String::valueOf)
+                                .map(TourType::getType)
+                                .map(Enum::name)
                                 .collect(Collectors.toList())
                 ).build();
     }

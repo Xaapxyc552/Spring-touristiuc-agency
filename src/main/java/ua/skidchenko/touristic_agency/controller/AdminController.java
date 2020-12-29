@@ -2,6 +2,7 @@ package ua.skidchenko.touristic_agency.controller;
 
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
@@ -14,14 +15,21 @@ import ua.skidchenko.touristic_agency.dto.TourDTO;
 import ua.skidchenko.touristic_agency.exceptions.TourNotPresentInDBException;
 import ua.skidchenko.touristic_agency.service.client_services.AdminTourService;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Log4j2
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+
+    @Value("${dollar.course}")
+    private Double dollarCourse;
 
     final
     AdminTourService tourService;
@@ -32,25 +40,31 @@ public class AdminController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/new-tour")
-    public String createNewTour() {
+    public String createNewTour(Model model) {
+        model.addAttribute("dollarCourse", dollarCourse);
         return "admin/newTour";
     }
 
     @PostMapping("/new-tour/create")
     public String createTourFromDTO(@Valid TourDTO tourDTO,
-                                    BindingResult bindingResult) {
+                                    BindingResult bindingResult,
+                                    HttpServletRequest request) {
         checkValidationErrorsElseException(tourDTO, bindingResult);
         log.info("Creating new tour from TourDTO:" + tourDTO.toString());
-//TODO сделать перевод денег в копейки и приделать знак валюты
+        transformMoneyInTourDTO(tourDTO, request);
         tourService.saveNewTour(tourDTO);
         return "redirect:/admin/confirm";
     }
 
+
+
     @PostMapping("/tour/save")
     public String saveTourAfterChanges(@Valid TourDTO tourDTO,
-                                       BindingResult bindingResult) {
+                                       BindingResult bindingResult,
+                                       HttpServletRequest request) {
         checkValidationErrorsElseException(tourDTO, bindingResult);
         log.info("Saving tour after editing :" + tourDTO.toString());
+        transformMoneyInTourDTO(tourDTO, request);
         tourService.updateTourAfterChanges(tourDTO);
         return "redirect:/admin/confirm";
     }
@@ -63,6 +77,7 @@ public class AdminController {
         log.info("Retrieving tour by tourId from DB to be edited by user. Tour id: " + tourId);
         TourDTO tourDTO = tourService.getWaitingTourDTOById(tourId);
         model.addAttribute("tourDTO", tourDTO);
+        model.addAttribute("dollarCourse", dollarCourse);
         return "/admin/editTour";
     }
 
@@ -86,7 +101,8 @@ public class AdminController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({TourNotPresentInDBException.class,
-            UsernameNotFoundException.class})
+            UsernameNotFoundException.class,
+            IllegalStateException.class})
     public String handleException(RuntimeException exception, Model model) {
         log.warn("Handling exception: " + exception.getMessage());
         model.addAttribute("error", exception.getMessage());
@@ -118,4 +134,26 @@ public class AdminController {
                 collect(Collectors.toList());
     }
 
+    private void transformMoneyInTourDTO(@Valid TourDTO tourDTO, HttpServletRequest request) {
+        Optional<Cookie> lang = Arrays.stream(request.getCookies())
+                .filter(n -> n.getName().equals("lang"))
+                .findFirst();
+        if (!lang.isPresent()) {
+            log.warn("Localization cookie is not present in request!");
+            throw new IllegalStateException("Localization cookie is not present in request!");
+        }
+        String langCookie = lang.get().getValue();
+        switch (langCookie) {
+            case "en-GB":
+                tourDTO.setPrice(String.valueOf((int)(Double.parseDouble(tourDTO.getPrice()) * 100 * dollarCourse)));
+                break;
+            case "uk-UA":
+                tourDTO.setPrice(String.valueOf((int)(Double.parseDouble(tourDTO.getPrice()) * 100)));
+                break;
+            default: {
+                log.warn("Language is unsupported!");
+                throw new IllegalStateException("Language is unsupported!");
+            }
+        }
+    }
 }

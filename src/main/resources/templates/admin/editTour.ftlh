@@ -43,8 +43,16 @@
         </tr>
         <tr>
             <td>
-                <label for="price"><@spring.message "tour.form.price"/></label><br>
-                <@spring.formInput "tourDTO.price"/>
+                <label for="price"><@spring.message "tour.form.price"/><@spring.message "money.sign"/></label><br>
+                <@spring.bind path="tourDTO.price"/>
+                <input type="text"
+                        <#if "${requestContext.locale}"=="uk_UA">
+                            value="${tourDTO.price?number/100}"
+                        <#else>
+                            value="${tourDTO.price?number/dollarCourse/100}"
+                        </#if>
+                       name="${spring.status.expression}" />
+
             </td>
         </tr>
         <tr>
