@@ -17,6 +17,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import ua.skidchenko.touristic_agency.interceptors.PutUserInfoIntoModelInterceptor;
+import ua.skidchenko.touristic_agency.service.util.TourSortingHolder;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -67,7 +68,7 @@ public class TouristicAgencyApplication {
 
     @Bean
     @Qualifier("cacheOfUsersSorts")
-    public Map<String, Sort> cacheOfUsersSorts() {
+    public Map<String, TourSortingHolder> cacheOfUsersSorts() {
         return new ConcurrentHashMap<>(10);
     }
 

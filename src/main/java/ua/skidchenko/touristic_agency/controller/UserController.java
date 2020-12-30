@@ -2,21 +2,26 @@ package ua.skidchenko.touristic_agency.controller;
 
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.skidchenko.touristic_agency.entity.Check;
 import ua.skidchenko.touristic_agency.entity.User;
+import ua.skidchenko.touristic_agency.exceptions.IncorrectSumm;
 import ua.skidchenko.touristic_agency.exceptions.NotPresentInDatabaseException;
+import ua.skidchenko.touristic_agency.exceptions.PropertyLocalizedException;
+import ua.skidchenko.touristic_agency.exceptions.UsernameNotFoundException;
 import ua.skidchenko.touristic_agency.service.client_services.UserBookingService;
 import ua.skidchenko.touristic_agency.service.UserService;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -36,10 +41,13 @@ public class UserController {
     final
     UserBookingService bookingService;
 
+    private final MessageSource messageSource;
+
     public UserController(UserService userService,
-                          UserBookingService bookingService) {
+                          UserBookingService bookingService, MessageSource messageSource) {
         this.userService = userService;
         this.bookingService = bookingService;
+        this.messageSource = messageSource;
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -75,7 +83,7 @@ public class UserController {
         amountOfCharge*=AMOUNT_OF_KOPECKS_IS_HRYVNA;
         log.info("Starting recharging user`s account. Amount: " + amountOfCharge + ". Username: " + username);
         if (amountOfCharge <= 0) {
-            throw new IllegalArgumentException("Amount to charge cannot be zero or negative.");
+            throw new IncorrectSumm("Amount to charge cannot be zero or negative.");
         }
         if(lang.equals("en-GB")){
             amountOfCharge=(long)(amountOfCharge*dollarCourse);
@@ -85,12 +93,15 @@ public class UserController {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({IllegalArgumentException.class,
+    @ExceptionHandler({IncorrectSumm.class,
             NotPresentInDatabaseException.class,
             UsernameNotFoundException.class})
-    public String handleException(Model model, RuntimeException ex) {
-        log.warn("Handling exception. Exception: " + ex.getMessage());
-        model.addAttribute("error", ex.getMessage());
+    public String handleException(Model model,
+                                  PropertyLocalizedException ex,
+                                  Locale locale) {
+        log.warn("Handling exception in ManagerController. Exception: " + ex.getMessage());
+        model.addAttribute("error", messageSource.getMessage(
+                ex.getPropertyExceptionCode(),null,locale));
         return "error";
     }
 

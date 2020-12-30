@@ -1,7 +1,10 @@
 package ua.skidchenko.touristic_agency.controller;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -9,12 +12,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ua.skidchenko.touristic_agency.controller.enums.OrderOfTours;
 import ua.skidchenko.touristic_agency.entity.Tour;
-import ua.skidchenko.touristic_agency.exceptions.NotPresentInDatabaseException;
+import ua.skidchenko.touristic_agency.exceptions.*;
 import ua.skidchenko.touristic_agency.service.TourService;
 import ua.skidchenko.touristic_agency.service.client_services.UserBookingService;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -33,9 +38,12 @@ public class TourController {
     final
     UserBookingService bookingService;
 
-    public TourController(TourService tourService, UserBookingService bookingService) {
+    private final MessageSource messageSource;
+
+    public TourController(TourService tourService, UserBookingService bookingService, MessageSource messageSource) {
         this.tourService = tourService;
         this.bookingService = bookingService;
+        this.messageSource = messageSource;
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -43,11 +51,11 @@ public class TourController {
     public String getTours(Model model,
                            @RequestParam(name = "order", required = false) OrderOfTours order,
                            @RequestParam(name = "direction", required = false) String direction,
-                           @PathVariable(name = "page") int currentPage) {
+                           @PathVariable(name = "page") int currentPage,
+                           @RequestParam(name = "selectedTourTypes", required = false) ArrayList<String> tourTypes) {
         log.info("Retrieving ordered paged tours with status \"WAITING\" from DB.");
         Page<Tour> orderedToursPage = tourService.getPagedWaitingToursOrderedByArgs(
-                order, direction, currentPage - 1
-        );
+                order, tourTypes, direction, currentPage - 1);
         List<Integer> pagesSequence = IntStream
                 .rangeClosed(START_PAGE_NUM, orderedToursPage.getTotalPages())
                 .boxed()
@@ -84,12 +92,13 @@ public class TourController {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({IllegalArgumentException.class,
-            NotPresentInDatabaseException.class})
-    public String handleException(Model model, RuntimeException ex) {
+    @ExceptionHandler({PropertyLocalizedException.class})
+    public String handleException(Model model,
+                                  PropertyLocalizedException ex,
+                                  Locale locale) {
         log.warn("Handling exception in TourController. Exception: " + ex.getMessage());
-        model.addAttribute("cause", ex.getCause());
-        model.addAttribute("error", ex.getMessage());
+        model.addAttribute("error", messageSource.getMessage(
+                ex.getPropertyExceptionCode(), null, locale));
         return "error";
     }
 

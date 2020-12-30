@@ -2,9 +2,10 @@ package ua.skidchenko.touristic_agency.controller;
 
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,7 +13,10 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import ua.skidchenko.touristic_agency.controller.exceptions.WrongFormInputDataException;
 import ua.skidchenko.touristic_agency.dto.TourDTO;
+import ua.skidchenko.touristic_agency.exceptions.CheckNotPresentInDBException;
+import ua.skidchenko.touristic_agency.exceptions.PropertyLocalizedException;
 import ua.skidchenko.touristic_agency.exceptions.TourNotPresentInDBException;
+import ua.skidchenko.touristic_agency.exceptions.UsernameNotFoundException;
 import ua.skidchenko.touristic_agency.service.client_services.AdminTourService;
 
 import javax.servlet.http.Cookie;
@@ -20,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -32,10 +37,13 @@ public class AdminController {
     private Double dollarCourse;
 
     final
-    AdminTourService tourService;
+    private AdminTourService tourService;
 
-    public AdminController(AdminTourService tourService) {
+    private final MessageSource messageSource;
+
+    public AdminController(AdminTourService tourService, MessageSource messageSource) {
         this.tourService = tourService;
+        this.messageSource = messageSource;
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -102,10 +110,13 @@ public class AdminController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({TourNotPresentInDBException.class,
             UsernameNotFoundException.class,
-            IllegalStateException.class})
-    public String handleException(RuntimeException exception, Model model) {
+            CheckNotPresentInDBException.class})
+    public String handleException(PropertyLocalizedException exception, Model model,
+                                  Locale locale) {
         log.warn("Handling exception: " + exception.getMessage());
-        model.addAttribute("error", exception.getMessage());
+        model.addAttribute("error", messageSource.getMessage(
+                exception.getPropertyExceptionCode(),null,locale)
+        );
         return "error";
     }
 

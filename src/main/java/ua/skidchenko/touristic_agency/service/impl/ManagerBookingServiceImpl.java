@@ -12,6 +12,7 @@ import ua.skidchenko.touristic_agency.entity.Tour;
 import ua.skidchenko.touristic_agency.entity.User;
 import ua.skidchenko.touristic_agency.entity.enums.CheckStatus;
 import ua.skidchenko.touristic_agency.entity.enums.TourStatus;
+import ua.skidchenko.touristic_agency.exceptions.CheckNotPresentInDBException;
 import ua.skidchenko.touristic_agency.exceptions.NotPresentInDatabaseException;
 import ua.skidchenko.touristic_agency.repository.CheckRepository;
 import ua.skidchenko.touristic_agency.repository.UserRepository;
@@ -78,7 +79,7 @@ public class ManagerBookingServiceImpl implements ManagerBookingService {
         return checkRepository.findByIdAndStatusIn(checkId, Collections.singletonList(tourStatus))
                 .orElseThrow(() -> {
                             log.warn("Check not presented in Database. Check ID: " + checkId);
-                            return new NotPresentInDatabaseException(
+                            return new CheckNotPresentInDBException(
                                     "Check not presented in Database. Check ID: " + checkId);
                         }
                 );

@@ -12,8 +12,7 @@ import ua.skidchenko.touristic_agency.entity.User;
 import ua.skidchenko.touristic_agency.entity.enums.CheckStatus;
 import ua.skidchenko.touristic_agency.entity.enums.Role;
 import ua.skidchenko.touristic_agency.entity.enums.TourStatus;
-import ua.skidchenko.touristic_agency.exceptions.ForbiddenOperationExceprtion;
-import ua.skidchenko.touristic_agency.exceptions.NotPresentInDatabaseException;
+import ua.skidchenko.touristic_agency.exceptions.*;
 import ua.skidchenko.touristic_agency.repository.CheckRepository;
 import ua.skidchenko.touristic_agency.repository.TourRepository;
 import ua.skidchenko.touristic_agency.repository.UserRepository;
@@ -55,7 +54,7 @@ public class UserBookingServiceImpl implements UserBookingService {
 
         if (user.getMoney().compareTo(tour.getPrice()) < 0) {
             log.warn("User has not enough money");
-            throw new IllegalArgumentException("User has not enough money");
+            throw new UserHasNotEnoughMoney("User has not enough money");
         }
         user.setMoney(user.getMoney() - tour.getPrice());
         tour.setTourStatus(TourStatus.REGISTERED);
@@ -89,7 +88,7 @@ public class UserBookingServiceImpl implements UserBookingService {
                 CheckStatus.getInstanceByEnum(CheckStatus.Status.WAITING_FOR_CONFIRM));
         User userFromDB = checkFromDB.getUser();
         if (!userFromDB.getUsername().equals(username)) {
-            throw new ForbiddenOperationExceprtion("Username of check's owner not equals to your.");
+            throw new ForbiddenOperationException("Username of check's owner not equals to your.");
         }
         checkFromDB.getTour().setTourStatus(TourStatus.WAITING);
         userFromDB.setMoney(
@@ -106,7 +105,7 @@ public class UserBookingServiceImpl implements UserBookingService {
         return tourRepository.findByIdAndTourStatus(tourId, status)
                 .orElseThrow(() -> {
                             log.warn("Tour not presented in Database. Tour id: " + tourId);
-                            return new NotPresentInDatabaseException(
+                            return new TourNotPresentInDBException(
                                     "Tour not presented in Database. Tour id: " + tourId);
                         }
                 );
@@ -116,7 +115,7 @@ public class UserBookingServiceImpl implements UserBookingService {
         return userRepository.findByUsernameAndRole(username, Role.ROLE_USER)
                 .orElseThrow(() -> {
                             log.warn("User not presented in Database. Username: " + username);
-                            return new NotPresentInDatabaseException(
+                            return new UsernameNotFoundException(
                                     "User not presented in Database. Username: " + username);
                         }
                 );
@@ -126,7 +125,7 @@ public class UserBookingServiceImpl implements UserBookingService {
         return checkRepository.findByIdAndStatusIn(checkId, Collections.singletonList(tourStatus))
                 .orElseThrow(() -> {
                             log.warn("Check not presented in Database. Check ID: " + checkId);
-                            return new NotPresentInDatabaseException(
+                            return new CheckNotPresentInDBException(
                                     "Check not presented in Database. Check ID: " + checkId);
                         }
                 );

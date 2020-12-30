@@ -1,7 +1,9 @@
 package ua.skidchenko.touristic_agency.controller;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -11,9 +13,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import ua.skidchenko.touristic_agency.entity.Check;
 import ua.skidchenko.touristic_agency.exceptions.NotPresentInDatabaseException;
+import ua.skidchenko.touristic_agency.exceptions.PropertyLocalizedException;
 import ua.skidchenko.touristic_agency.service.client_services.ManagerBookingService;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -27,12 +31,16 @@ public class ManagerController {
 
     private static final String ATTRIBUTE_TO_PASS_IF_CONFIRMED = "message";
 
-    final
+    private final
     ManagerBookingService bookingService;
 
-    public ManagerController(ManagerBookingService bookingService) {
+    private final MessageSource messageSource;
+
+    public ManagerController(ManagerBookingService bookingService, MessageSource messageSource) {
         this.bookingService = bookingService;
+        this.messageSource = messageSource;
     }
+
 
     @GetMapping("/tours-operations/{page}")
     public String getManageableTours(Model model,
@@ -84,12 +92,13 @@ public class ManagerController {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({IllegalArgumentException.class,
-            NotPresentInDatabaseException.class,})
-    public String handleException(Model model, RuntimeException ex) {
+    @ExceptionHandler({NotPresentInDatabaseException.class})
+    public String handleException(Model model,
+                                  PropertyLocalizedException ex,
+                                  Locale locale) {
         log.warn("Handling exception in ManagerController. Exception: " + ex.getMessage());
-        model.addAttribute("cause", ex.getCause());
-        model.addAttribute("error", ex.getMessage());
+        model.addAttribute("error", messageSource.getMessage(
+                ex.getPropertyExceptionCode(),null,locale));
         return "error";
     }
 }

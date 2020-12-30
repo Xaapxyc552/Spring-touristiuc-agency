@@ -2,14 +2,14 @@ package ua.skidchenko.touristic_agency.service.impl;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.skidchenko.touristic_agency.dto.UserDTO;
 import ua.skidchenko.touristic_agency.entity.enums.Role;
 import ua.skidchenko.touristic_agency.entity.User;
-import ua.skidchenko.touristic_agency.exceptions.UsernameExistsExcetion;
+import ua.skidchenko.touristic_agency.exceptions.UsernameExistsException;
+import ua.skidchenko.touristic_agency.exceptions.UsernameNotFoundException;
 import ua.skidchenko.touristic_agency.repository.UserRepository;
 import ua.skidchenko.touristic_agency.service.UserService;
 
@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
         log.info("Saving user into DB. User data: " + userDTO.toString());
         if (userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
             log.warn("Username " + userDTO.getUsername() + " already exists in system;");
-            throw new UsernameExistsExcetion("Username " + userDTO.getUsername() + " already exists in system;");
+            throw new UsernameExistsException("Username " + userDTO.getUsername() + " already exists in system;");
         }
         return userRepository.save(buildUserFromDTO(userDTO));
     }

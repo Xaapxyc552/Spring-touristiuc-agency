@@ -3,8 +3,9 @@ package ua.skidchenko.touristic_agency.controller;
 
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,12 +13,14 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import ua.skidchenko.touristic_agency.controller.exceptions.WrongFormInputDataException;
 import ua.skidchenko.touristic_agency.dto.UserDTO;
-import ua.skidchenko.touristic_agency.exceptions.UsernameExistsExcetion;
-import ua.skidchenko.touristic_agency.service.TourService;
+import ua.skidchenko.touristic_agency.exceptions.PropertyLocalizedException;
+import ua.skidchenko.touristic_agency.exceptions.UsernameExistsException;
+import ua.skidchenko.touristic_agency.exceptions.UsernameNotFoundException;
 import ua.skidchenko.touristic_agency.service.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 
@@ -29,8 +32,11 @@ public class SignUpController {
     final
     UserService userService;
 
-    public SignUpController(UserService userService) {
+    private final MessageSource messageSource;
+
+    public SignUpController(UserService userService, MessageSource messageSource) {
         this.userService = userService;
+        this.messageSource = messageSource;
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -69,10 +75,13 @@ public class SignUpController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({UsernameNotFoundException.class,
-            UsernameExistsExcetion.class})
-    public String handleOtherExceptions(RuntimeException exception, Model model) {
-        log.warn("Handling exception: " + exception.getMessage());
-        model.addAttribute("error", exception.getMessage());
+            UsernameExistsException.class})
+    public String handleException(Model model,
+                                  PropertyLocalizedException ex,
+                                  Locale locale) {
+        log.warn("Handling exception in SignUp controller. Exception: " + ex.getMessage());
+        model.addAttribute("error", messageSource.getMessage(
+                ex.getPropertyExceptionCode(),null,locale));
         return "error";
     }
 

@@ -7,6 +7,7 @@ import lombok.ToString;
 import ua.skidchenko.touristic_agency.entity.Tour;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +59,12 @@ public class TourType {
     public static List<TourType> getTourTypesFromStringList(List<String> list) {
         return list.stream().
                 map(el -> TourType.getInstanceByType(Enum.valueOf(TourType.Type.class, el)))
+                .collect(Collectors.toList());
+    }
+
+    public static List<TourType> getEnumMembersAsList() {
+        return Arrays.stream(Type.values())
+                .map(TourType::getInstanceByType)
                 .collect(Collectors.toList());
     }
 }

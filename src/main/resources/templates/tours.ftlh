@@ -9,14 +9,21 @@
         <option value="AMOUNT_OF_PERSONS"><@spring.message "tour.amount_of_persons"/>:</option>
         <option value="PRICE"><@spring.message "tour.price"/></option>
         <option value="HOTEL_TYPE"><@spring.message "tour.hotel_type"/></option>
-        <option value="TOUR_TYPE"><@spring.message "tour.tour_type"/></option>
     </select>
     <@spring.message "tour.form.direction.header"/>:
     <select name="direction" id="direction">
         <option value="DESC"><@spring.message "tour.form.direction.desc"/></option>
         <option value="ASC"><@spring.message "tour.form.direction.asc"/></option>
     </select>
+    <br>
+    <input type="checkbox" name="selectedTourTypes" value="SHOPPING">
+    <@spring.message "tour.tour_type.SHOPPING"/> <br>
+    <input type="checkbox" name="selectedTourTypes" value="RECREATION">
+    <@spring.message "tour.tour_type.RECREATION"/><br>
+    <input type="checkbox" name="selectedTourTypes" value="EXCURSION">
+    <@spring.message "tour.tour_type.EXCURSION"/> <br>
     <input type="submit" value="<@spring.message "tour.form.direction.submit"/>">
+
 </form>
 
 <@commonMacro.pagingMacro pagesSequence=pagesSequence currentPage=currentPage  href="/tours/list/"/>
@@ -67,28 +74,32 @@
             <td>${tour.amountOfPersons}</td>
         </tr>
         <tr>
-            <td>
-                <#if userRole == "ROLE_USER">
+
+            <#if userRole == "ROLE_USER">
+                <td>
                     <form action="/tours/book/${tour.id}" method="post">
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                         <input type="submit" value="<@spring.message "tour.book_tour"/>">
                     </form>
-                </#if>
-                <#if userRole == "ROLE_ADMIN">
+                </td>
+            </#if>
+            <#if userRole == "ROLE_ADMIN">
+                <td>
                     <form action="/admin/tour/edit/${tour.id}" method="get">
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                         <input type="submit" value="<@spring.message "tour.edit"/>">
                     </form>
+                </td>
+            </#if>
 
-                </#if>
-            </td>
-            <td><#if userRole == "ROLE_ADMIN">
+            <#if userRole == "ROLE_ADMIN">
+                <td>
                     <form action="/admin/tour/delete/${tour.id}" method="post">
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                         <input type="submit" value="<@spring.message "tour.delete"/>">
                     </form>
-
-                </#if></td>
+                </td>
+            </#if>
         </tr>
     <#else><@spring.message "check.empty_list"/>
     </#list>

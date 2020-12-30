@@ -18,6 +18,7 @@ import ua.skidchenko.touristic_agency.exceptions.NotPresentInDatabaseException;
 import ua.skidchenko.touristic_agency.exceptions.TourNotPresentInDBException;
 import ua.skidchenko.touristic_agency.repository.TourRepository;
 import ua.skidchenko.touristic_agency.service.TourService;
+import ua.skidchenko.touristic_agency.service.util.TourSortingHolder;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -35,10 +36,10 @@ public class TourServiceImpl implements TourService {
     TourRepository tourRepository;
 
     final
-    Map<String, Sort> cacheOfUsersSorts;
+    Map<String, TourSortingHolder> cacheOfUsersSorts;
 
     public TourServiceImpl(TourRepository tourRepository,
-                           @Qualifier("cacheOfUsersSorts") Map<String, Sort> cacheOfUsersSorts) {
+                           @Qualifier("cacheOfUsersSorts") Map<String, TourSortingHolder> cacheOfUsersSorts) {
         this.tourRepository = tourRepository;
         this.cacheOfUsersSorts = cacheOfUsersSorts;
     }
@@ -51,12 +52,14 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public Page<Tour> getPagedWaitingToursOrderedByArgs(OrderOfTours orderOfTours,
+                                                        List<String> tourTypes,
                                                         String direction,
                                                         int currentPage) {
         log.info("Retrieving ordered paged tours with status \"WAITING\" from DB.");
         Sort.Order orderByPrimary;
         Sort.Order orderByUserSettings;
-        Sort sorting;
+        TourSortingHolder userSortingHolder;
+
         String sessionId = ((WebAuthenticationDetails) SecurityContextHolder
                 .getContext()
                 .getAuthentication()
@@ -68,14 +71,19 @@ public class TourServiceImpl implements TourService {
             orderByUserSettings = new Sort.Order(
                     Sort.Direction.fromString(direction), orderOfTours.getPropertyToSort()
             );
-            sorting = Sort.by(Arrays.asList(orderByPrimary, orderByUserSettings));
-            cacheOfUsersSorts.put(sessionId, sorting);
+            userSortingHolder = new TourSortingHolder();
+            userSortingHolder.setSorting(Sort.by(Arrays.asList(orderByPrimary, orderByUserSettings)));
+            if (tourTypes != null && !tourTypes.isEmpty()) {
+                userSortingHolder.setTourTypes(TourType.getTourTypesFromStringList(tourTypes));
+            } else {
+                userSortingHolder.setTourTypes(TourType.getEnumMembersAsList());
+            }
+            cacheOfUsersSorts.put(sessionId, userSortingHolder);
         } else {
-            sorting = getSortFromCacheElseGetDefault(sessionId);
+            userSortingHolder = getSortFromCacheElseGetDefault(sessionId);
         }
-        Example<Tour> example = getTourExampleByStatus(TourStatus.WAITING);
-        PageRequest pr = PageRequest.of(currentPage, pageSize, sorting);
-        return tourRepository.findAll(example, pr);
+        PageRequest pr = PageRequest.of(currentPage, pageSize, userSortingHolder.getSorting());
+        return tourRepository.findDistinctByTourTypesInAndTourStatus(pr, userSortingHolder.getTourTypes(), TourStatus.WAITING);
     }
 
     @Override
@@ -92,7 +100,7 @@ public class TourServiceImpl implements TourService {
                 (tourId, Collections.singletonList(TourStatus.WAITING))
                 .orElseThrow(() -> {
                     log.warn("Tour not present in DB. Tour ID:" + tourId);
-                    throw new NotPresentInDatabaseException("Tour not present in DB. Tour ID:" + tourId);
+                    throw new TourNotPresentInDBException("Tour not present in DB. Tour ID:" + tourId);
                 });
         return TourDTO.builder()
                 .id(String.valueOf(tour.getId()))
@@ -139,33 +147,20 @@ public class TourServiceImpl implements TourService {
         return save;
     }
 
-    private Sort getSortFromCacheElseGetDefault(String username) {
-        log.info("Getting user's sorting from cache by username. Username: " + username);
-        return cacheOfUsersSorts.computeIfAbsent(username, (n) -> {
-            Sort.Order orderByBurning = new Sort.Order(Sort.Direction.DESC, PRIMARY_SORTING_PROPERTY);
-            Sort.Order orderByHotelType = new Sort.Order(
-                    Sort.Direction.DESC, OrderOfTours.HOTEL_TYPE.getPropertyToSort()
-            );
-            return Sort.by(Arrays.asList(orderByBurning, orderByHotelType));
-        });
-    }
+    private TourSortingHolder getSortFromCacheElseGetDefault(String sessionId) {
+        log.info("Getting user's sorting from cache by username. Username: " + sessionId);
+        TourSortingHolder tourSortingHolder;
+        if (sessionId != null && (tourSortingHolder = cacheOfUsersSorts.get(sessionId)) != null) {
+            return tourSortingHolder;
+        }
+        Sort.Order orderByBurning = new Sort.Order(Sort.Direction.DESC, PRIMARY_SORTING_PROPERTY);
+        Sort.Order orderByHotelType = new Sort.Order(
+                Sort.Direction.DESC, OrderOfTours.HOTEL_TYPE.getPropertyToSort()
+        );
+        return new TourSortingHolder(
+                Sort.by(Arrays.asList(orderByBurning, orderByHotelType)),
+                TourType.getEnumMembersAsList());
 
-    @NotNull
-    private Example<Tour> getTourExampleByStatus(TourStatus status) {
-        ExampleMatcher matcher =
-                ExampleMatcher
-                        .matchingAll()
-                        .withMatcher("tour_status", ExampleMatcher.GenericPropertyMatchers
-                                .exact()
-                                .ignoreCase())
-                        .withIgnoreNullValues()
-                        .withIgnorePaths("burning", "price", "amountOfPersons");
-        return Example.of(
-                Tour
-                        .builder()
-                        .tourStatus(status)
-                        .build()
-                , matcher);
     }
 
     private Tour buildNewTourFromTourDTO(TourDTO tourDTO) {
