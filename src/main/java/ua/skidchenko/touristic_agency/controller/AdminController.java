@@ -122,13 +122,14 @@ public class AdminController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({WrongFormInputDataException.class})
+    //TODO добавить ControllerAdvice для всех контроллеров
     public String handleValidationExceptions(WrongFormInputDataException exception, Model model) {
         log.warn("Handling exception: " + exception.getErrors());
         model.addAttribute("errors", exception.getErrors());
         return "validationErrors";
     }
 
-    private void checkValidationErrorsElseException(@Valid TourDTO tourDTO, BindingResult bindingResult) {
+    public void checkValidationErrorsElseException(@Valid TourDTO tourDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.warn("Exception during validation of tourDTO" + tourDTO.toString());
             throw new WrongFormInputDataException("Entered incorrect data.",

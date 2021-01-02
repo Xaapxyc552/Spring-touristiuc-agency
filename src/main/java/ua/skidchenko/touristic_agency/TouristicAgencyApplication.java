@@ -8,7 +8,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.LocaleResolver;
@@ -19,15 +18,14 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import ua.skidchenko.touristic_agency.interceptors.PutUserInfoIntoModelInterceptor;
 import ua.skidchenko.touristic_agency.service.util.TourSortingHolder;
 
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @SpringBootApplication
 @EnableTransactionManagement
-@ComponentScan(basePackages = "ua.skidchenko")
-@EnableJpaRepositories("ua.skidchenko.touristic_agency.repository")
+//@ComponentScan(basePackages = "ua.skidchenko")
+//@EnableJpaRepositories("ua.skidchenko.touristic_agency.repository")
 public class TouristicAgencyApplication {
 
     public static void main(String[] args) {

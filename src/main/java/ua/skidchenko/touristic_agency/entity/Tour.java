@@ -1,6 +1,7 @@
 package ua.skidchenko.touristic_agency.entity;
 
 import lombok.*;
+import ua.skidchenko.touristic_agency.dto.TourDTO;
 import ua.skidchenko.touristic_agency.entity.enums.HotelType;
 import ua.skidchenko.touristic_agency.entity.enums.TourStatus;
 import ua.skidchenko.touristic_agency.entity.enums.TourType;
@@ -60,4 +61,27 @@ public class Tour {
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "hotel_type")
     private HotelType hotelType;
+
+    public static Tour buildNewTourFromTourDTO(TourDTO tourDTO) {
+        Tour build = Tour.builder()
+                .tourStatus(TourStatus.WAITING)
+                .hotelType(tourDTO.getHotelType())
+                .description(tourDTO.getDescription())
+                .price(Long.valueOf(tourDTO.getPrice()))
+                .name(tourDTO.getName())
+                .amountOfPersons(
+                        Integer.parseInt(tourDTO.getAmountOfPersons())
+                )
+                .tourTypes(
+                        TourType.getTourTypesFromStringList(tourDTO.getTourTypes()
+                        )
+                ).build();
+        if (tourDTO.getBurning() != null) {
+            build.setBurning(Boolean.parseBoolean(tourDTO.getBurning()));
+        }
+        if (tourDTO.getId() != null) {
+            build.setId(Long.valueOf(tourDTO.getId()));
+        }
+        return build;
+    }
 }

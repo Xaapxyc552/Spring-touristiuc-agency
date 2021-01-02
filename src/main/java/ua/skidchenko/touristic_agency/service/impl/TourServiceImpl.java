@@ -89,7 +89,7 @@ public class TourServiceImpl implements TourService {
     @Override
     public Tour saveNewTour(TourDTO tourDTO) {
         log.info("Saving new into DB tour built from DTO: " + tourDTO.toString());
-        Tour newTour = buildNewTourFromTourDTO(tourDTO);
+        Tour newTour = Tour.buildNewTourFromTourDTO(tourDTO);
         return tourRepository.save(newTour);
     }
 
@@ -126,7 +126,7 @@ public class TourServiceImpl implements TourService {
         if (!byId.isPresent()) {
             throw new TourNotPresentInDBException("Tour was deleted from DB during editing.");
         }
-        Tour tourToSave = buildNewTourFromTourDTO(tourDTO);
+        Tour tourToSave = Tour.buildNewTourFromTourDTO(tourDTO);
         tourRepository.save(tourToSave);
         return tourToSave;
     }

@@ -1,4 +1,4 @@
-package ua.skidchenko.touristic_agency.service.impl;
+package ua.skidchenko.touristic_agency.security;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Qualifier;

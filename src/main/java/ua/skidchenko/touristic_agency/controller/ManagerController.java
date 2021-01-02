@@ -45,7 +45,7 @@ public class ManagerController {
     @GetMapping("/tours-operations/{page}")
     public String getManageableTours(Model model,
                                      @PathVariable(name = "page") int currentPage) {
-        log.info("Retrievingg paged tours with status \"WAITING_TO_CONFIRM\" to be managed by manager.");
+        log.info("Retrieving paged tours with status \"WAITING_TO_CONFIRM\" to be managed by manager.");
         Page<Check> pagedWaitingChecks = bookingService.getPagedWaitingChecks(currentPage - 1);
         List<Integer> pagesSequence = IntStream
                 .rangeClosed(1, pagedWaitingChecks.getTotalPages())
