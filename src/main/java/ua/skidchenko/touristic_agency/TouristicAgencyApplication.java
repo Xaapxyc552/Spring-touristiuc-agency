@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @SpringBootApplication
 @EnableTransactionManagement
-//@ComponentScan(basePackages = "ua.skidchenko")
+@ComponentScan(basePackages = "ua.skidchenko")
 //@EnableJpaRepositories("ua.skidchenko.touristic_agency.repository")
 public class TouristicAgencyApplication {
 
