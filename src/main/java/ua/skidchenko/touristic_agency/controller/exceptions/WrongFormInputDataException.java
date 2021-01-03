@@ -14,11 +14,6 @@ public class WrongFormInputDataException extends RuntimeException {
         this.errors = errors;
     }
 
-    public WrongFormInputDataException(List<String> errors) {
-        super();
-        this.errors = errors;
-    }
-
     public WrongFormInputDataException(String message, List<String> errors) {
         super(message);
         this.errors = errors;

@@ -163,29 +163,5 @@ public class TourServiceImpl implements TourService {
 
     }
 
-    private Tour buildNewTourFromTourDTO(TourDTO tourDTO) {
-        log.info("Building new tour from DTO to save or to update edited tour. TourDTO: " + tourDTO.toString());
-        Tour build = Tour.builder()
-                .tourStatus(TourStatus.WAITING)
-                .hotelType(tourDTO.getHotelType())
-                .description(tourDTO.getDescription())
-                .price(Long.valueOf(tourDTO.getPrice()))
-                .name(tourDTO.getName())
-                .amountOfPersons(
-                        Integer.parseInt(tourDTO.getAmountOfPersons())
-                )
-                .tourTypes(
-                        TourType.getTourTypesFromStringList(tourDTO.getTourTypes()
-                        )
-                ).build();
-        if (tourDTO.getBurning() != null) {
-            build.setBurning(Boolean.parseBoolean(tourDTO.getBurning()));
-        }
-        if (tourDTO.getId() != null) {
-            build.setId(Long.valueOf(tourDTO.getId()));
-        }
-        return build;
-    }
-
 
 }

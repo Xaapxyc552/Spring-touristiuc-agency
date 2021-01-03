@@ -48,6 +48,8 @@ public class TourController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/list/{page}")
+    //TODO разделить на несколько методов с зависимостями от pathVariable
+    // и добавить principal и передачу username в метод
     public String getTours(Model model,
                            @RequestParam(name = "order", required = false) OrderOfTours order,
                            @RequestParam(name = "direction", required = false) String direction,

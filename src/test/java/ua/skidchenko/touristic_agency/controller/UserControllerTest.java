@@ -84,4 +84,25 @@ class UserControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/user/personal-account/1"));
     }
+    
+    @Test
+    void rechargeUserWallet_IncorrectSumTuRecharge_Assert400() throws Exception {
+        String username = "username";
+        Principal principal = Mockito.mock(Principal.class);
+        when(principal.getName()).thenReturn(username);
+
+        Cookie cookie = Mockito.mock(Cookie.class);
+        Mockito.when(cookie.getName()).thenReturn("lang");
+        Mockito.when(cookie.getValue()).thenReturn("en-GB");
+
+        String message = "message";
+        when(messageSource.getMessage(anyString(), isNull(), any())).thenReturn(message);
+
+        mvc.perform(MockMvcRequestBuilders.post("/user/recharge", 1)
+                .param("amountOfCharge","-400")
+                .cookie(cookie)
+                .principal(principal))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("error"));
+    }
 }

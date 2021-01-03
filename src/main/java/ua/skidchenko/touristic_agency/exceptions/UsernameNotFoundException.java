@@ -9,15 +9,7 @@ public class UsernameNotFoundException extends PropertyLocalizedException {
         return MESSAGE_CODE;
     }
 
-    public UsernameNotFoundException() {
-        super();
-    }
-
     public UsernameNotFoundException(String message) {
         super(message);
-    }
-
-    public UsernameNotFoundException(String message, Throwable cause) {
-        super(message, cause);
     }
 }

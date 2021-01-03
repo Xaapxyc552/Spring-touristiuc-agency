@@ -9,15 +9,7 @@ public class TourNotPresentInDBException extends PropertyLocalizedException {
         return MESSAGE_CODE;
     }
 
-    public TourNotPresentInDBException() {
-        super();
-    }
-
     public TourNotPresentInDBException(String message) {
         super(message);
-    }
-
-    public TourNotPresentInDBException(String message, Throwable cause) {
-        super(message, cause);
     }
 }

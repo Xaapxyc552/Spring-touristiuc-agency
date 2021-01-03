@@ -9,15 +9,8 @@ public class CheckNotPresentInDBException extends PropertyLocalizedException {
         return MESSAGE_CODE;
     }
 
-    public CheckNotPresentInDBException() {
-        super();
-    }
-
     public CheckNotPresentInDBException(String message) {
         super(message);
     }
 
-    public CheckNotPresentInDBException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

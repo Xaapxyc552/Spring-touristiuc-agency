@@ -9,16 +9,7 @@ public class UserHasNotEnoughMoney extends PropertyLocalizedException {
         return MESSAGE_CODE;
     }
 
-    public UserHasNotEnoughMoney() {
-        super();
-    }
-
     public UserHasNotEnoughMoney(String message) {
         super(message);
     }
-
-    public UserHasNotEnoughMoney(String message, Throwable cause) {
-        super(message, cause);
-    }
-
 }

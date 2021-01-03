@@ -8,18 +8,4 @@ public class NotPresentInDatabaseException extends PropertyLocalizedException {
     public String getPropertyExceptionCode() {
         return MESSAGE_CODE;
     }
-
-    public NotPresentInDatabaseException() {
-        super();
     }
-
-    public NotPresentInDatabaseException(String message) {
-        super(message);
-    }
-
-    public NotPresentInDatabaseException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-
-}

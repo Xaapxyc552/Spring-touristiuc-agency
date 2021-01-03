@@ -9,16 +9,7 @@ public class IncorrectSumm extends PropertyLocalizedException {
         return MESSAGE_CODE;
     }
 
-    public IncorrectSumm() {
-        super();
-    }
-
     public IncorrectSumm(String message) {
         super(message);
     }
-
-    public IncorrectSumm(String message, Throwable cause) {
-        super(message, cause);
-    }
-
 }

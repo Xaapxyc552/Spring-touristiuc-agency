@@ -8,15 +8,7 @@ public class UsernameExistsException extends PropertyLocalizedException{
         return MESSAGE_CODE;
     }
 
-    public UsernameExistsException() {
-        super();
-    }
-
     public UsernameExistsException(String message) {
         super(message);
-    }
-
-    public UsernameExistsException(String message, Throwable cause) {
-        super(message, cause);
     }
 }

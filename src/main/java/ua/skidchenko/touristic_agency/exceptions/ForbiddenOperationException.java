@@ -9,16 +9,7 @@ public class ForbiddenOperationException extends PropertyLocalizedException {
         return MESSAGE_CODE;
     }
 
-    public ForbiddenOperationException() {
-        super();
-    }
-
     public ForbiddenOperationException(String message) {
         super(message);
     }
-
-    public ForbiddenOperationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
 }
