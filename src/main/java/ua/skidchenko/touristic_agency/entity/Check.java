@@ -4,6 +4,7 @@ import lombok.*;
 import ua.skidchenko.touristic_agency.entity.enums.CheckStatus;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -18,6 +19,12 @@ public class Check {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "creation_time",updatable = false, columnDefinition = "TIMESTAMP")
+    LocalDateTime creationTime;
+
+    @Column(name = "modified_time", columnDefinition = "TIMESTAMP")
+    LocalDateTime modifiedTime;
 
     @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
     @JoinColumn(name = "tour_id")

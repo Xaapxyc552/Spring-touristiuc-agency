@@ -18,6 +18,7 @@ import ua.skidchenko.touristic_agency.repository.CheckRepository;
 import ua.skidchenko.touristic_agency.repository.UserRepository;
 import ua.skidchenko.touristic_agency.service.client_services.ManagerBookingService;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 @Service
@@ -58,6 +59,7 @@ public class ManagerBookingServiceImpl implements ManagerBookingService {
         checkToDecline.getUser().setMoney(checkToDecline.getUser().getMoney() + checkToDecline.getTotalPrice());
         checkToDecline.getTour().setTourStatus(TourStatus.WAITING);
         checkToDecline.setStatus(CheckStatus.getInstanceByEnum(CheckStatus.Status.DECLINED));
+        checkToDecline.setModifiedTime(LocalDateTime.now());
         checkRepository.save(checkToDecline);
         return Boolean.TRUE;
     }
@@ -71,6 +73,7 @@ public class ManagerBookingServiceImpl implements ManagerBookingService {
 
         tourToConfirm.setTourStatus(TourStatus.SOLD);
         checkToConfirm.setStatus(CheckStatus.getInstanceByEnum(CheckStatus.Status.CONFIRMED));
+        checkToConfirm.setModifiedTime(LocalDateTime.now());
         checkRepository.save(checkToConfirm);
         return Boolean.TRUE;
     }

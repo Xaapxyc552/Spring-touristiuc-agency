@@ -18,6 +18,7 @@ import ua.skidchenko.touristic_agency.repository.TourRepository;
 import ua.skidchenko.touristic_agency.repository.UserRepository;
 import ua.skidchenko.touristic_agency.service.client_services.UserBookingService;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 @Service
@@ -65,6 +66,7 @@ public class UserBookingServiceImpl implements UserBookingService {
                 .tour(tour)
                 .totalPrice(tour.getPrice())
                 .user(user)
+                .creationTime(LocalDateTime.now())
                 .build();
         log.info("Finished creation check:" + bookingCheck.toString());
         return checkRepository.save(bookingCheck);
@@ -97,6 +99,7 @@ public class UserBookingServiceImpl implements UserBookingService {
         checkFromDB.setStatus(CheckStatus.getInstanceByEnum(
                 CheckStatus.Status.CANCELED)
         );
+        checkFromDB.setModifiedTime(LocalDateTime.now());
         checkRepository.save(checkFromDB);
         return Boolean.TRUE;
     }

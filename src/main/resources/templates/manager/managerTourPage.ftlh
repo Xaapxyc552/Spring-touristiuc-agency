@@ -32,6 +32,22 @@
             <th><@spring.message "check.status"/></th>
             <th><@spring.message "check.status.${check.status.status}"/></th>
         </tr>
+        <tr>
+            <th><@spring.message "check.booked_time"/></th>
+            <th>${check.creationTime.format('yyyy-MM-dd HH:mm:ss')}</th>
+        </tr>
+        <#if check.status.status.name()="CANCELED">
+            <tr>
+                <th><@spring.message "check.canceled_time"/></th>
+                <th>${check.modifiedTime.format('yyyy-MM-dd HH:mm:ss')}</th>
+            </tr>
+        </#if>
+        <#if check.status.status.name()="DECLINED">
+            <tr>
+                <th><@spring.message "check.declined_time"/></th>
+                <th>${check.modifiedTime.format('yyyy-MM-dd HH:mm:ss')}</th>
+            </tr>
+        </#if>
         <#if check.status.status.name()="WAITING_FOR_CONFIRM">
             <tr>
                 <th>

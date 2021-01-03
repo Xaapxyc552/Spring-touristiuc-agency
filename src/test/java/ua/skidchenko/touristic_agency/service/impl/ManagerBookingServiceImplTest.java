@@ -72,6 +72,7 @@ class ManagerBookingServiceImplTest {
         Assert.assertEquals(userMoney + checkPrice, (long) check.getUser().getMoney());
         Assert.assertEquals(TourStatus.WAITING, check.getTour().getTourStatus());
         Assert.assertEquals(CheckStatus.getInstanceByEnum(CheckStatus.Status.DECLINED), check.getStatus());
+        Assert.assertNotNull(check.getModifiedTime());
 
     }
 
@@ -97,6 +98,7 @@ class ManagerBookingServiceImplTest {
         Assert.assertTrue(managerBookingService.confirmBooking(1L));
         Assert.assertEquals(CheckStatus.getInstanceByEnum(CheckStatus.Status.CONFIRMED), check.getStatus());
         Assert.assertEquals(TourStatus.SOLD, check.getTour().getTourStatus());
+        Assert.assertNotNull(check.getModifiedTime());
     }
 
     @Test

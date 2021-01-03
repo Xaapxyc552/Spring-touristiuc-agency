@@ -25,6 +25,7 @@ import ua.skidchenko.touristic_agency.repository.TourRepository;
 import ua.skidchenko.touristic_agency.repository.UserRepository;
 import ua.skidchenko.touristic_agency.service.util.TourSortingHolder;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -77,6 +78,7 @@ class UserBookingServiceImplTest {
                 .id(1L)
                 .user(userFromRepo)
                 .tour(tourFromRepo)
+                .creationTime(LocalDateTime.now())
                 .status(CheckStatus.getInstanceByEnum(CheckStatus.Status.WAITING_FOR_CONFIRM))
                 .build();
 
@@ -93,7 +95,7 @@ class UserBookingServiceImplTest {
         Assert.assertEquals(userMoney - tourPrice, (long) userFromRepo.getMoney());
         Assert.assertEquals(CheckStatus.getInstanceByEnum(CheckStatus.Status.WAITING_FOR_CONFIRM),
                 check.getStatus());
-
+        Assert.assertNotNull(checkFromRepo.getCreationTime());
     }
 
     @Test
@@ -215,6 +217,7 @@ class UserBookingServiceImplTest {
         Assert.assertEquals(userMoney + tourPrice, (long) userFromRepo.getMoney());
         Assert.assertEquals(CheckStatus.getInstanceByEnum(CheckStatus.Status.CANCELED),
                 checkFromRepo.getStatus());
+        Assert.assertNotNull(checkFromRepo.getModifiedTime());
 
     }
 }
