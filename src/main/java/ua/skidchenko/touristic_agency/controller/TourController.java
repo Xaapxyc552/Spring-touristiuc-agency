@@ -54,6 +54,9 @@ public class TourController {
                            @PathVariable(name = "page") int currentPage,
                            @RequestParam(name = "selectedTourTypes", required = false) ArrayList<String> tourTypes,
                            HttpSession session) {
+        if (tourTypes==null) {
+            tourTypes = new ArrayList<>();
+        }
         log.info("Retrieving ordered paged tours with status \"WAITING\" from DB. Parameters:" +
                         "Order: {}. Direction: {}. Current page: {}. Selected tour types: {}",
                 orderOfTours, direction, currentPage, tourTypes);
@@ -81,10 +84,11 @@ public class TourController {
     }
 
     @PostMapping("/book/{tourId}")
-    public String bookTour(@PathVariable(name = "tourId") Long tourId,
+    public String bookTour(Model model,
+                           @PathVariable(name = "tourId") Long tourId,
                            Principal principal) {
         String username = principal.getName();
-        log.info("Starting booking tour to user. Username: {}. Tour ID: {}" ,username,tourId);
+        log.info("Starting booking tour to user. Username: " + username + " Tour ID: " + tourId);
         bookingService.bookTourByIdForUsername(tourId, username);
         return "redirect:/tours/confirmed-operation";
     }
@@ -93,7 +97,7 @@ public class TourController {
     public String removeBookingFromTour(@PathVariable(name = "checkId") Long checkId,
                                         Principal principal) {
         String username = principal.getName();
-        log.info("Removing booking from tour by checkId. Username: {}. Check ID: {}",username,checkId);
+        log.info("Removing booking from tour by checkId. Username: " + username + " Check ID: " + checkId);
         bookingService.cancelBookingByCheckId(checkId, username);
         return "redirect:/tours/confirmed-operation";
     }
@@ -108,11 +112,9 @@ public class TourController {
     public String handleException(Model model,
                                   PropertyLocalizedException ex,
                                   Locale locale) {
-        log.warn("Handling exception in TourController. Exception: {}",ex.getMessage());
+        log.warn("Handling exception in TourController. Exception: " + ex.getMessage());
         model.addAttribute("error", messageSource.getMessage(
                 ex.getPropertyExceptionCode(), null, locale));
         return "error";
     }
-
-
 }

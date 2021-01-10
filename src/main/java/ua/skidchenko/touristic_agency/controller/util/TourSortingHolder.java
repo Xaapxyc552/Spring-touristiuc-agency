@@ -27,7 +27,7 @@ import java.util.List;
 @Log4j2
 public class TourSortingHolder implements Serializable {
     private static final String PRIMARY_SORTING_PROPERTY = "burning";
-    public static final String SORTING_HOLDER = "sortingHolder";
+    private static final String SORTING_HOLDER = "sortingHolder";
 
     private Integer currentPage;
     private Sort sorting;
@@ -49,25 +49,20 @@ public class TourSortingHolder implements Serializable {
      */
     public static TourSortingHolder getInstanceFromRequestParameters(OrderOfTours orderOfTours,
                                                                      String direction,
-                                                                     ArrayList<String> tourTypes,
+                                                                     List<String> tourTypes,
                                                                      HttpSession session) {
         log.info("Creating new instance of TourSortingHolder for request.");
         TourSortingHolder userSortingHolder;
 
         if (orderOfTours != null && direction != null) {
-            TourSortingHolder.TourSortingHolderBuilder userSortingHolderBuilder = TourSortingHolder.builder()
+            userSortingHolder = TourSortingHolder.builder()
                     .currentPage(0)
                     .tourTypes(TourType.getTourTypesFromStringList(tourTypes))
                     .sorting(Sort.by(new Sort.Order(Sort.Direction.DESC, PRIMARY_SORTING_PROPERTY),
-                            new Sort.Order(Sort.Direction.fromString(direction), orderOfTours.getPropertyToSort())));
-            if (!tourTypes.isEmpty()) {
-                userSortingHolder = userSortingHolderBuilder
+                            new Sort.Order(Sort.Direction.fromString(direction), orderOfTours.getPropertyToSort())))
                         .tourTypes(TourType.getTourTypesFromStringList(tourTypes))
                         .build();
-            } else {
-                userSortingHolder = userSortingHolderBuilder.tourTypes(TourType.getEnumMembersAsList())
-                        .build();
-            }
+
             session.setAttribute(SORTING_HOLDER, userSortingHolder);
         } else {
             userSortingHolder = getSortingFromSessionElseGetDefault(session);
