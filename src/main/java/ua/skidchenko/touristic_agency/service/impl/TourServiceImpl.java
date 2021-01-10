@@ -1,20 +1,14 @@
 package ua.skidchenko.touristic_agency.service.impl;
 
 import lombok.extern.log4j.Log4j2;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.skidchenko.touristic_agency.controller.enums.OrderOfTours;
 import ua.skidchenko.touristic_agency.dto.TourDTO;
 import ua.skidchenko.touristic_agency.entity.Tour;
 import ua.skidchenko.touristic_agency.entity.enums.TourStatus;
 import ua.skidchenko.touristic_agency.entity.enums.TourType;
-import ua.skidchenko.touristic_agency.exceptions.NotPresentInDatabaseException;
 import ua.skidchenko.touristic_agency.exceptions.TourNotPresentInDBException;
 import ua.skidchenko.touristic_agency.repository.TourRepository;
 import ua.skidchenko.touristic_agency.service.TourService;
@@ -27,7 +21,6 @@ import java.util.stream.Collectors;
 @Log4j2
 public class TourServiceImpl implements TourService {
 
-    private static final String PRIMARY_SORTING_PROPERTY = "burning";
 
     @Value("${page.size}")
     private int pageSize;
@@ -35,13 +28,9 @@ public class TourServiceImpl implements TourService {
     final
     TourRepository tourRepository;
 
-    final
-    Map<String, TourSortingHolder> cacheOfUsersSorts;
 
-    public TourServiceImpl(TourRepository tourRepository,
-                           @Qualifier("cacheOfUsersSorts") Map<String, TourSortingHolder> cacheOfUsersSorts) {
+    public TourServiceImpl(TourRepository tourRepository) {
         this.tourRepository = tourRepository;
-        this.cacheOfUsersSorts = cacheOfUsersSorts;
     }
 
     @Override
@@ -51,38 +40,10 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public Page<Tour> getPagedWaitingToursOrderedByArgs(OrderOfTours orderOfTours,
-                                                        List<String> tourTypes,
-                                                        String direction,
-                                                        int currentPage) {
+    public Page<Tour> getPagedWaitingToursOrderedByArgs(TourSortingHolder userSortingHolder) {
         log.info("Retrieving ordered paged tours with status \"WAITING\" from DB.");
-        Sort.Order orderByPrimary;
-        Sort.Order orderByUserSettings;
-        TourSortingHolder userSortingHolder;
 
-        String sessionId = ((WebAuthenticationDetails) SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getDetails())
-                .getSessionId();
-
-        if (orderOfTours != null && direction != null) {
-            orderByPrimary = new Sort.Order(Sort.Direction.DESC, PRIMARY_SORTING_PROPERTY);
-            orderByUserSettings = new Sort.Order(
-                    Sort.Direction.fromString(direction), orderOfTours.getPropertyToSort()
-            );
-            userSortingHolder = new TourSortingHolder();
-            userSortingHolder.setSorting(Sort.by(Arrays.asList(orderByPrimary, orderByUserSettings)));
-            if (tourTypes != null && !tourTypes.isEmpty()) {
-                userSortingHolder.setTourTypes(TourType.getTourTypesFromStringList(tourTypes));
-            } else {
-                userSortingHolder.setTourTypes(TourType.getEnumMembersAsList());
-            }
-            cacheOfUsersSorts.put(sessionId, userSortingHolder);
-        } else {
-            userSortingHolder = getSortFromCacheElseGetDefault(sessionId);
-        }
-        PageRequest pr = PageRequest.of(currentPage, pageSize, userSortingHolder.getSorting());
+        PageRequest pr = PageRequest.of(userSortingHolder.getCurrentPage(), pageSize, userSortingHolder.getSorting());
         return tourRepository.findDistinctByTourTypesInAndTourStatus(pr, userSortingHolder.getTourTypes(), TourStatus.WAITING);
     }
 
@@ -147,21 +108,7 @@ public class TourServiceImpl implements TourService {
         return save;
     }
 
-    private TourSortingHolder getSortFromCacheElseGetDefault(String sessionId) {
-        log.info("Getting user's sorting from cache by username. Username: " + sessionId);
-        TourSortingHolder tourSortingHolder;
-        if (sessionId != null && (tourSortingHolder = cacheOfUsersSorts.get(sessionId)) != null) {
-            return tourSortingHolder;
-        }
-        Sort.Order orderByBurning = new Sort.Order(Sort.Direction.DESC, PRIMARY_SORTING_PROPERTY);
-        Sort.Order orderByHotelType = new Sort.Order(
-                Sort.Direction.DESC, OrderOfTours.HOTEL_TYPE.getPropertyToSort()
-        );
-        return new TourSortingHolder(
-                Sort.by(Arrays.asList(orderByBurning, orderByHotelType)),
-                TourType.getEnumMembersAsList());
 
-    }
 
 
 }

@@ -22,6 +22,7 @@ import ua.skidchenko.touristic_agency.exceptions.UserHasNotEnoughMoney;
 import ua.skidchenko.touristic_agency.service.TourService;
 import ua.skidchenko.touristic_agency.service.client_services.AdminTourService;
 import ua.skidchenko.touristic_agency.service.client_services.UserBookingService;
+import ua.skidchenko.touristic_agency.service.util.TourSortingHolder;
 
 import java.security.Principal;
 import java.util.Collections;
@@ -57,7 +58,7 @@ class TourControllerTest {
 
     @Test
     void getTours_WithCorrectInput_Assert200() throws Exception {
-        when(tourService.getPagedWaitingToursOrderedByArgs(any(), anyList(), anyString(), anyInt()))
+        when(tourService.getPagedWaitingToursOrderedByArgs(any(TourSortingHolder.class)))
                 .thenReturn(Page.empty());
 
         mvc.perform(MockMvcRequestBuilders.get("/tours/list/{page}", 1)
@@ -71,7 +72,7 @@ class TourControllerTest {
 
     @Test
     void getTours_WithPartialCorrectInput_Assert200() throws Exception {
-        when(tourService.getPagedWaitingToursOrderedByArgs(isNull(), isNull(), isNull(), anyInt()))
+        when(tourService.getPagedWaitingToursOrderedByArgs(any(TourSortingHolder.class)))
                 .thenReturn(Page.empty());
 
         mvc.perform(MockMvcRequestBuilders.get("/tours/list/{page}", 1))

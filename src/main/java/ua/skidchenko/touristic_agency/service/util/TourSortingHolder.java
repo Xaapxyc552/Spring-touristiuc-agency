@@ -1,35 +1,22 @@
 package ua.skidchenko.touristic_agency.service.util;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.domain.Sort;
 import ua.skidchenko.touristic_agency.entity.enums.TourType;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class TourSortingHolder {
+@Getter
+@Setter
+@AllArgsConstructor
+@Builder
+
+public class TourSortingHolder implements Serializable {
+    private Integer currentPage;
     private Sort sorting;
-    private List<TourType> tourTypes;
-
-    public TourSortingHolder() {
-    }
-
-    public TourSortingHolder(Sort sorting, List<TourType> tourTypes) {
-        this.sorting = sorting;
-        this.tourTypes = tourTypes;
-    }
-
-    public Sort getSorting() {
-        return sorting;
-    }
-
-    public void setSorting(Sort sorting) {
-        this.sorting = sorting;
-    }
-
-    public List<TourType> getTourTypes() {
-        return tourTypes;
-    }
-
-    public void setTourTypes(List<TourType> tourTypes) {
-        this.tourTypes = tourTypes;
-    }
+    private transient List<TourType> tourTypes;
 }

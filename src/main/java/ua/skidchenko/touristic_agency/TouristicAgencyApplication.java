@@ -1,7 +1,6 @@
 package ua.skidchenko.touristic_agency;
 
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.MessageSource;
@@ -16,11 +15,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import ua.skidchenko.touristic_agency.interceptors.PutUserInfoIntoModelInterceptor;
-import ua.skidchenko.touristic_agency.service.util.TourSortingHolder;
 
 import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @SpringBootApplication
 @EnableTransactionManagement
@@ -62,12 +58,6 @@ public class TouristicAgencyApplication {
         messageSource.setBasenames("messages");
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
-    }
-
-    @Bean
-    @Qualifier("cacheOfUsersSorts")
-    public Map<String, TourSortingHolder> cacheOfUsersSorts() {
-        return new ConcurrentHashMap<>(10);
     }
 
 }

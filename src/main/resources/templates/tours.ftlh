@@ -1,26 +1,44 @@
 <#import "spring.ftl" as spring/>
 <#import "macroses/commonMacro.ftlh" as commonMacro>
+
+<#function contains item>
+    <#list selectedTourTypes as nextInList>
+        <#if nextInList == item><#return true></#if>
+    </#list>
+    <#return false>
+</#function>
+
+<#function areEquals item1 item2>
+    <#if item1?? && item2?? && item1?lower_case==item2?lower_case><#return true></#if>
+    <#return false>
+</#function>
+
+
 <body>
 <@commonMacro.headerMacro/>
 <form action="/tours/list/1" method="get">
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     <@spring.message "tour.form.ordering.header"/>:
     <select name="order" id="order">
-        <option value="AMOUNT_OF_PERSONS"><@spring.message "tour.amount_of_persons"/>:</option>
-        <option value="PRICE"><@spring.message "tour.price"/></option>
-        <option value="HOTEL_TYPE"><@spring.message "tour.hotel_type"/></option>
+        <option value="AMOUNT_OF_PERSONS"<#if areEquals(order,'AMOUNT_OF_PERSONS')> selected="selected"</#if> > <@spring.message "tour.amount_of_persons"/></option>
+        <option value="PRICE"<#if areEquals(order,'PRICE')> selected="selected"</#if>><@spring.message "tour.price"/></option>
+        <option value="HOTEL_TYPE"<#if areEquals(order,'HOTEL_TYPE')> selected="selected"</#if>><@spring.message "tour.hotel_type"/></option>
     </select>
     <@spring.message "tour.form.direction.header"/>:
     <select name="direction" id="direction">
-        <option value="DESC"><@spring.message "tour.form.direction.desc"/></option>
-        <option value="ASC"><@spring.message "tour.form.direction.asc"/></option>
+        <option value="DESC" <#if areEquals(direction,'DESC')> selected="selected"</#if>><@spring.message "tour.form.direction.desc"/></option>
+        <option value="ASC" <#if areEquals(direction,'ASC')> selected="selected"</#if>><@spring.message "tour.form.direction.asc"/></option>
     </select>
     <br>
-    <input type="checkbox" name="selectedTourTypes" value="SHOPPING">
+
+
+    <input type="checkbox" name="selectedTourTypes" value="SHOPPING" <#if contains('SHOPPING')>checked="checked" </#if>>
     <@spring.message "tour.tour_type.SHOPPING"/> <br>
-    <input type="checkbox" name="selectedTourTypes" value="RECREATION">
+    <input type="checkbox" name="selectedTourTypes" value="RECREATION"
+           <#if contains('RECREATION')>checked="checked" </#if>>
     <@spring.message "tour.tour_type.RECREATION"/><br>
-    <input type="checkbox" name="selectedTourTypes" value="EXCURSION">
+    <input type="checkbox" name="selectedTourTypes" value="EXCURSION"
+           <#if contains('EXCURSION')>checked="checked" </#if>>
     <@spring.message "tour.tour_type.EXCURSION"/> <br>
     <input type="submit" value="<@spring.message "tour.form.direction.submit"/>">
 
