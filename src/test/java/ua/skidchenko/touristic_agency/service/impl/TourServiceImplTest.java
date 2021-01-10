@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import ua.skidchenko.touristic_agency.dto.TourDTO;
@@ -14,19 +13,14 @@ import ua.skidchenko.touristic_agency.entity.Tour;
 import ua.skidchenko.touristic_agency.entity.enums.HotelType;
 import ua.skidchenko.touristic_agency.entity.enums.TourStatus;
 import ua.skidchenko.touristic_agency.entity.enums.TourType;
-import ua.skidchenko.touristic_agency.repository.CheckRepository;
 import ua.skidchenko.touristic_agency.repository.TourRepository;
-import ua.skidchenko.touristic_agency.repository.UserRepository;
-import ua.skidchenko.touristic_agency.service.util.TourSortingHolder;
+import ua.skidchenko.touristic_agency.controller.util.TourSortingHolder;
 
-import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 

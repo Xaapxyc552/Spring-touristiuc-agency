@@ -9,26 +9,20 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ua.skidchenko.touristic_agency.controller.enums.OrderOfTours;
-import ua.skidchenko.touristic_agency.entity.Check;
 import ua.skidchenko.touristic_agency.entity.enums.TourType;
 import ua.skidchenko.touristic_agency.exceptions.ForbiddenOperationException;
 import ua.skidchenko.touristic_agency.exceptions.UserHasNotEnoughMoney;
 import ua.skidchenko.touristic_agency.service.TourService;
-import ua.skidchenko.touristic_agency.service.client_services.AdminTourService;
 import ua.skidchenko.touristic_agency.service.client_services.UserBookingService;
-import ua.skidchenko.touristic_agency.service.util.TourSortingHolder;
+import ua.skidchenko.touristic_agency.controller.util.TourSortingHolder;
 
 import java.security.Principal;
-import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -64,7 +58,7 @@ class TourControllerTest {
         mvc.perform(MockMvcRequestBuilders.get("/tours/list/{page}", 1)
                 .param("selectedTourTypes", TourType.getInstanceByType(TourType.Type.SHOPPING).getType().name())
                 .param("direction", "desc")
-                .param("order", OrderOfTours.AMOUNT_OF_PERSONS.name()))
+                .param("order", TourSortingHolder.OrderOfTours.AMOUNT_OF_PERSONS.name()))
                 .andExpect(model().attributeExists("tours", "currentPage", "pagesSequence", "dollarCourse"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("tours"));

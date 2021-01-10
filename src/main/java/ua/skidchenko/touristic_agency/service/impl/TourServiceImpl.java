@@ -12,7 +12,7 @@ import ua.skidchenko.touristic_agency.entity.enums.TourType;
 import ua.skidchenko.touristic_agency.exceptions.TourNotPresentInDBException;
 import ua.skidchenko.touristic_agency.repository.TourRepository;
 import ua.skidchenko.touristic_agency.service.TourService;
-import ua.skidchenko.touristic_agency.service.util.TourSortingHolder;
+import ua.skidchenko.touristic_agency.controller.util.TourSortingHolder;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -44,7 +44,8 @@ public class TourServiceImpl implements TourService {
         log.info("Retrieving ordered paged tours with status \"WAITING\" from DB.");
 
         PageRequest pr = PageRequest.of(userSortingHolder.getCurrentPage(), pageSize, userSortingHolder.getSorting());
-        return tourRepository.findDistinctByTourTypesInAndTourStatus(pr, userSortingHolder.getTourTypes(), TourStatus.WAITING);
+        return tourRepository.findDistinctByTourTypesInAndTourStatus(
+                pr, userSortingHolder.getTourTypes(), TourStatus.WAITING);
     }
 
     @Override
