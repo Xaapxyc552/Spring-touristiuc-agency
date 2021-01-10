@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import ua.skidchenko.touristic_agency.entity.Check;
 import ua.skidchenko.touristic_agency.entity.User;
 import ua.skidchenko.touristic_agency.entity.enums.CheckStatus;
-import ua.skidchenko.touristic_agency.entity.enums.TourStatus;
 
 import java.util.Collection;
 import java.util.Optional;

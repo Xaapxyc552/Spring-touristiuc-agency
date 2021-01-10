@@ -23,9 +23,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        log.info("Looking for user with username " + username + " in DB.");
+        log.info("Looking for user with username {} in DB.",username);
         User user = repository.findByUsername(username).orElseThrow(() -> {
-            log.warn("User with username " + username + " not found in DB. Exception thrown.");
+            log.warn("User with username {} not found in DB. Exception thrown.",username);
             return new UsernameNotFoundException("User with username " + username + " was not found.");
         });
         log.info("Retrieved by Spring Security user from UserService: " + user);

@@ -8,13 +8,16 @@ class UserServiceImplTest {
 
     @Test
     void saveUser() {
+        //TODO
     }
 
     @Test
     void getUserByUsername() {
+        //TODO
     }
 
     @Test
     void chargeUserWallet() {
+        //TODO
     }
 }

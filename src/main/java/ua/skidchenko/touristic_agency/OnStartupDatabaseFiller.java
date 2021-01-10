@@ -3,7 +3,6 @@ package ua.skidchenko.touristic_agency;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import ua.skidchenko.touristic_agency.dto.UserDTO;
 import ua.skidchenko.touristic_agency.entity.*;
 import ua.skidchenko.touristic_agency.entity.enums.*;
 import ua.skidchenko.touristic_agency.repository.UserRepository;

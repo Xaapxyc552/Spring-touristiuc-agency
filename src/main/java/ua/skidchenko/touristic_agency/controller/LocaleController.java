@@ -14,7 +14,7 @@ public class LocaleController {
     @GetMapping("/")
     public String changeLanguage(@CookieValue("lang") String langCode,
                                  HttpServletRequest request){
-        log.info("Language changed to: " + langCode);
+        log.info("Language changed to: {}",langCode);
         return "redirect:" + request.getHeader("referer");
     }
 }

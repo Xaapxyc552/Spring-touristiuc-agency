@@ -3,7 +3,6 @@ package ua.skidchenko.touristic_agency.controller;
 
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -50,14 +49,14 @@ public class SignUpController {
     public String createNewUser(@Valid UserDTO userDTO,
                                 BindingResult bindingResult) {
         checkValidationErrorsElseException(userDTO, bindingResult);
-        log.info("Saving into DB new user. User data: " + userDTO.toString());
+        log.info("Saving into DB new user. User data: {}",userDTO.toString());
         userService.saveUser(userDTO);
         return "redirect:/signup/confirm";
     }
 
     private void checkValidationErrorsElseException(UserDTO userDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            log.warn("Exception during validation of UserDTO" + userDTO.toString());
+            log.warn("Exception during validation of UserDTO. {}",userDTO.toString());
             throw new WrongFormInputDataException("Entered incorrect data.",
                     getValidationErrors(bindingResult));
         }

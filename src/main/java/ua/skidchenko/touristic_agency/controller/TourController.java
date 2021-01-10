@@ -46,6 +46,15 @@ public class TourController {
         this.messageSource = messageSource;
     }
 
+
+    /**
+     * Retrieves Tours from database according to paging and sorting
+     * parameters that come as request parameters from the user to be
+     * displayed at the view. Also puts in model attributes such as
+     * sorting direction, current page and available for this sort sequence of pages,
+     * number or tour types, chosen by user and available in application,
+     * in general, all parameters that necessary to display retrieved tours correctly
+     */
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/list/{page}")
     public String getTours(Model model,
@@ -54,7 +63,7 @@ public class TourController {
                            @PathVariable(name = "page") int currentPage,
                            @RequestParam(name = "selectedTourTypes", required = false) ArrayList<String> tourTypes,
                            HttpSession session) {
-        if (tourTypes==null) {
+        if (tourTypes == null) {
             tourTypes = new ArrayList<>();
         }
         log.info("Retrieving ordered paged tours with status \"WAITING\" from DB. Parameters:" +
@@ -88,7 +97,7 @@ public class TourController {
                            @PathVariable(name = "tourId") Long tourId,
                            Principal principal) {
         String username = principal.getName();
-        log.info("Starting booking tour to user. Username: " + username + " Tour ID: " + tourId);
+        log.info("Starting booking tour to user. Username: {}. Tour ID: {}.", username, tourId);
         bookingService.bookTourByIdForUsername(tourId, username);
         return "redirect:/tours/confirmed-operation";
     }
@@ -97,7 +106,7 @@ public class TourController {
     public String removeBookingFromTour(@PathVariable(name = "checkId") Long checkId,
                                         Principal principal) {
         String username = principal.getName();
-        log.info("Removing booking from tour by checkId. Username: " + username + " Check ID: " + checkId);
+        log.info("Removing booking from tour by checkId. Username: {}. Check ID: {}", username, checkId);
         bookingService.cancelBookingByCheckId(checkId, username);
         return "redirect:/tours/confirmed-operation";
     }
@@ -112,7 +121,7 @@ public class TourController {
     public String handleException(Model model,
                                   PropertyLocalizedException ex,
                                   Locale locale) {
-        log.warn("Handling exception in TourController. Exception: " + ex.getMessage());
+        log.warn("Handling exception in TourController. Exception: {}", ex.getMessage());
         model.addAttribute("error", messageSource.getMessage(
                 ex.getPropertyExceptionCode(), null, locale));
         return "error";

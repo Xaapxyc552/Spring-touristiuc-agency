@@ -1,7 +1,5 @@
 package ua.skidchenko.touristic_agency.repository;
 
-import org.jetbrains.annotations.NotNull;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,7 +9,6 @@ import ua.skidchenko.touristic_agency.entity.enums.TourStatus;
 import ua.skidchenko.touristic_agency.entity.enums.TourType;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 @Repository

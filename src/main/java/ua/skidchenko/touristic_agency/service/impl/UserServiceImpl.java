@@ -33,9 +33,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(UserDTO userDTO) {
-        log.info("Saving user into DB. User data: " + userDTO.toString());
+        log.info("Saving user into DB. User data: {}", userDTO.toString());
         if (userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
-            log.warn("Username " + userDTO.getUsername() + " already exists in system;");
+            log.warn("Username {} already exists in system.", userDTO.getUsername());
             throw new UsernameExistsException("Username " + userDTO.getUsername() + " already exists in system;");
         }
         return userRepository.save(buildUserFromDTO(userDTO));
@@ -43,10 +43,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByUsername(String username) {
-        log.info("Retrieving user by username. Username: " + username);
+        log.info("Retrieving user by username. Username: {}", username);
         Optional<User> userOptional = userRepository.findByUsername(username);
         return userOptional.orElseThrow(() -> {
-            log.warn("User with username " + username + " not found in DB. Exception thrown.");
+            log.warn("User with username {} not found in DB. Exception thrown.", username);
             return new UsernameNotFoundException("User with username " + username + " was not found.");
         });
 
@@ -55,9 +55,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User chargeUserWallet(Long amountOfCharge, String username) {
-        log.info("Starting recharging user`s account. Amount: " + amountOfCharge + ". Username: " + username);
+        log.info("Starting recharging user`s account. Amount: {}. Username: {}", amountOfCharge, username);
         User user = userRepository.findByUsernameAndRole(username, Role.ROLE_USER).orElseThrow(() -> {
-            log.warn("User not present in DB. Recharging interrupted. Username: " + username);
+            log.warn("User not present in DB. Recharging interrupted. Username: {}", username);
             throw new UsernameNotFoundException("User not found in DB. Username: " + username);
         });
         user.setMoney(user.getMoney() + amountOfCharge);
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private User buildUserFromDTO(UserDTO userDTO) {
-        log.info("Building new user from userDTO. UserDTO: " + userDTO.toString());
+        log.info("Building new user from userDTO. UserDTO: {}", userDTO.toString());
         return User.builder()
                 .password(passwordEncoder.encode(userDTO.getPassword()))
                 .firstname(userDTO.getFirstname())

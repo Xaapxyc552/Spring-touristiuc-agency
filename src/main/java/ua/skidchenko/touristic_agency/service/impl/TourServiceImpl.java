@@ -35,33 +35,31 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public Tour saveTourToDB(Tour tour) {
-        log.info("Saving tour to DB: " + tour.toString());
+        log.info("Saving tour to DB: {}", tour.toString());
         return tourRepository.save(tour);
     }
 
     @Override
     public Page<Tour> getPagedWaitingToursOrderedByArgs(TourSortingHolder userSortingHolder) {
         log.info("Retrieving ordered paged tours with status \"WAITING\" from DB.");
-
-        PageRequest pr = PageRequest.of(userSortingHolder.getCurrentPage(), pageSize, userSortingHolder.getSorting());
         return tourRepository.findDistinctByTourTypesInAndTourStatus(
-                pr, userSortingHolder.getTourTypes(), TourStatus.WAITING);
+                PageRequest.of(userSortingHolder.getCurrentPage(), pageSize, userSortingHolder.getSorting()),
+                userSortingHolder.getTourTypes(), TourStatus.WAITING);
     }
 
     @Override
     public Tour saveNewTour(TourDTO tourDTO) {
-        log.info("Saving new into DB tour built from DTO: " + tourDTO.toString());
-        Tour newTour = Tour.buildNewTourFromTourDTO(tourDTO);
-        return tourRepository.save(newTour);
+        log.info("Saving new into DB tour built from DTO: {}", tourDTO.toString());
+        return tourRepository.save(Tour.buildNewTourFromTourDTO(tourDTO));
     }
 
     @Override
     public TourDTO getWaitingTourDTOById(Long tourId) {
-        log.info("Retrieving new tourDTO from DB by tour ID. Tour ID: " + tourId);
+        log.info("Retrieving new tourDTO from DB by tour ID. Tour ID: {}", tourId);
         Tour tour = tourRepository.findByIdAndTourStatusIn
                 (tourId, Collections.singletonList(TourStatus.WAITING))
                 .orElseThrow(() -> {
-                    log.warn("Tour not present in DB. Tour ID:" + tourId);
+                    log.warn("Tour not present in DB. Tour ID: {}", tourId);
                     throw new TourNotPresentInDBException("Tour not present in DB. Tour ID:" + tourId);
                 });
         return TourDTO.builder()
@@ -82,12 +80,12 @@ public class TourServiceImpl implements TourService {
     @Override
     @Transactional
     public Tour updateTourAfterChanges(TourDTO tourDTO) {
-        log.info("Updating tour with data from tourDTO: " + tourDTO.toString());
-        Optional<Tour> byId = tourRepository.findByIdAndTourStatusIn(Long.valueOf(tourDTO.getId()),
-                Collections.singletonList(TourStatus.WAITING));
-        if (!byId.isPresent()) {
+        log.info("Updating tour with data from tourDTO: {}", tourDTO.toString());
+        tourRepository.findByIdAndTourStatusIn(Long.valueOf(tourDTO.getId()),
+                Collections.singletonList(TourStatus.WAITING)).orElseThrow(() -> {
+                    log.warn("Tour was deleted from DB during editing. TourID: {}",tourDTO.getId());
             throw new TourNotPresentInDBException("Tour was deleted from DB during editing.");
-        }
+        });
         Tour tourToSave = Tour.buildNewTourFromTourDTO(tourDTO);
         tourRepository.save(tourToSave);
         return tourToSave;
@@ -96,20 +94,16 @@ public class TourServiceImpl implements TourService {
     @Override
     @Transactional
     public Tour markTourAsDeleted(Long tourId) {
-        log.info("Marking tour as deleted. TourID: " + tourId);
+        log.info("Marking tour as deleted. TourID: {}", tourId);
         Tour tour = tourRepository.findByIdAndTourStatus(tourId, TourStatus.WAITING).orElseThrow(
                 () -> {
-                    log.warn("Waiting tour is not present id DB. Tour id: " + tourId);
+                    log.warn("Waiting tour is not present id DB. Tour id: {}", tourId);
                     throw new TourNotPresentInDBException("Waiting tour is not present id DB. Tour id:" + tourId);
                 }
         );
         tour.setTourStatus(TourStatus.DELETED);
-        Tour save = tourRepository.save(tour);
-        log.info("Tour marked as deleted. Tour id: " + tourId);
-        return save;
+        return tourRepository.save(tour);
     }
-
-
 
 
 }

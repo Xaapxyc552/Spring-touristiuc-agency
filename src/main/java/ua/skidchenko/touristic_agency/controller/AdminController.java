@@ -2,7 +2,6 @@ package ua.skidchenko.touristic_agency.controller;
 
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -36,8 +35,7 @@ public class AdminController {
     @Value("${dollar.course}")
     private Double dollarCourse;
 
-    final
-    private AdminTourService tourService;
+    final private AdminTourService tourService;
 
     private final MessageSource messageSource;
 
@@ -58,12 +56,11 @@ public class AdminController {
                                     BindingResult bindingResult,
                                     HttpServletRequest request) {
         checkValidationErrorsElseException(tourDTO, bindingResult);
-        log.info("Creating new tour from TourDTO:" + tourDTO.toString());
+        log.info("Creating new tour from TourDTO: {}", tourDTO.toString());
         transformMoneyInTourDTO(tourDTO, request);
         tourService.saveNewTour(tourDTO);
         return "redirect:/admin/confirm";
     }
-
 
 
     @PostMapping("/tour/save")
@@ -71,7 +68,7 @@ public class AdminController {
                                        BindingResult bindingResult,
                                        HttpServletRequest request) {
         checkValidationErrorsElseException(tourDTO, bindingResult);
-        log.info("Saving tour after editing :" + tourDTO.toString());
+        log.info("Saving tour after editing : {}", tourDTO.toString());
         transformMoneyInTourDTO(tourDTO, request);
         tourService.updateTourAfterChanges(tourDTO);
         return "redirect:/admin/confirm";
@@ -82,7 +79,7 @@ public class AdminController {
     @GetMapping("/tour/edit/{tourId}")
     public String getTourByIdToEdit(Model model,
                                     @PathVariable(name = "tourId") Long tourId) {
-        log.info("Retrieving tour by tourId from DB to be edited by user. Tour id: " + tourId);
+        log.info("Retrieving tour by tourId from DB to be edited by user. Tour id: {}", tourId);
         TourDTO tourDTO = tourService.getWaitingTourDTOById(tourId);
         model.addAttribute("tourDTO", tourDTO);
         model.addAttribute("dollarCourse", dollarCourse);
@@ -91,7 +88,7 @@ public class AdminController {
 
     @PostMapping("/tour/delete/{tourId}")
     public String markTourAsDeleted(@PathVariable(name = "tourId") Long tourId) {
-        log.info("Marking tour as deleted by tourId. Tour id: " + tourId);
+        log.info("Marking tour as deleted by tourId. Tour id: {}", tourId);
         tourService.markTourAsDeleted(tourId);
         log.info("Tour marked as deleted. Tour id: " + tourId);
         return "redirect:/tours/list/1";
@@ -113,25 +110,24 @@ public class AdminController {
             CheckNotPresentInDBException.class})
     public String handleException(PropertyLocalizedException exception, Model model,
                                   Locale locale) {
-        log.warn("Handling exception: " + exception.getMessage());
+        log.warn("Handling exception: {}", exception.getMessage());
         model.addAttribute("error", messageSource.getMessage(
-                exception.getPropertyExceptionCode(),null,locale)
+                exception.getPropertyExceptionCode(), null, locale)
         );
         return "error";
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({WrongFormInputDataException.class})
-    //TODO добавить ControllerAdvice для всех контроллеров
     public String handleValidationExceptions(WrongFormInputDataException exception, Model model) {
-        log.warn("Handling exception: " + exception.getErrors());
+        log.warn("Handling exception: {}",exception.getErrors());
         model.addAttribute("errors", exception.getErrors());
         return "validationErrors";
     }
 
     public void checkValidationErrorsElseException(@Valid TourDTO tourDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            log.warn("Exception during validation of tourDTO" + tourDTO.toString());
+            log.warn("Exception during validation of tourDTO {}",tourDTO.toString());
             throw new WrongFormInputDataException("Entered incorrect data.",
                     getValidationErrors(bindingResult));
         }
@@ -157,10 +153,10 @@ public class AdminController {
         String langCookie = lang.get().getValue();
         switch (langCookie) {
             case "en-GB":
-                tourDTO.setPrice(String.valueOf((int)(Double.parseDouble(tourDTO.getPrice()) * 100 * dollarCourse)));
+                tourDTO.setPrice(String.valueOf((int) (Double.parseDouble(tourDTO.getPrice()) * 100 * dollarCourse)));
                 break;
             case "uk-UA":
-                tourDTO.setPrice(String.valueOf((int)(Double.parseDouble(tourDTO.getPrice()) * 100)));
+                tourDTO.setPrice(String.valueOf((int) (Double.parseDouble(tourDTO.getPrice()) * 100)));
                 break;
             default: {
                 log.warn("Language is unsupported!");

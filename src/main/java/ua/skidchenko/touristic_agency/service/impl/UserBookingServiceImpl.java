@@ -48,8 +48,7 @@ public class UserBookingServiceImpl implements UserBookingService {
     @Override
     @Transactional
     public Check bookTourByIdForUsername(Long tourId, String username) {
-        log.info("Booking tour for user by username and tourId. " +
-                "Username: " + username + ". Tour ID:" + tourId + ".");
+        log.info("Booking tour for user by username and tourId. Username: {}. Tour ID: {}", username, tourId);
         Tour tour = getTourFromRepositoryByIdAndStatus(tourId, TourStatus.WAITING);
         User user = getUserFromRepository(username);
 
@@ -68,15 +67,14 @@ public class UserBookingServiceImpl implements UserBookingService {
                 .user(user)
                 .creationTime(LocalDateTime.now())
                 .build();
-        log.info("Finished creation check:" + bookingCheck.toString());
+        log.info("Finished creation check: {}", bookingCheck.toString());
         return checkRepository.save(bookingCheck);
     }
 
     @Override
     @Transactional
     public Page<Check> findAllChecksByUsernameOrderByStatus(String username, int page) {
-        log.info("Retrieving paged user's checks ordered by status. Username: " +
-                "" + username + ". Page: " + page);
+        log.info("Retrieving paged user's checks ordered by status. Username: {}.  Page: {}.", username, page);
         User byUsername = getUserFromRepository(username);
         PageRequest pr = PageRequest.of(page, pageSize);
         return checkRepository.findAllByUserOrderByStatus(byUsername, pr);
@@ -85,7 +83,7 @@ public class UserBookingServiceImpl implements UserBookingService {
     @Override
     @Transactional
     public Boolean cancelBookingByCheckId(Long checkId, String username) {
-        log.info("Canceling booking by checkId. Check ID: " + checkId.toString());
+        log.info("Canceling booking by checkId. Check ID: {}",checkId.toString());
         Check checkFromDB = getCheckFromRepositoryByIdAndStatus(checkId,
                 CheckStatus.getInstanceByEnum(CheckStatus.Status.WAITING_FOR_CONFIRM));
         User userFromDB = checkFromDB.getUser();
@@ -107,7 +105,7 @@ public class UserBookingServiceImpl implements UserBookingService {
     private Tour getTourFromRepositoryByIdAndStatus(Long tourId, TourStatus status) {
         return tourRepository.findByIdAndTourStatus(tourId, status)
                 .orElseThrow(() -> {
-                            log.warn("Tour not presented in Database. Tour id: " + tourId);
+                            log.warn("Tour not presented in Database. Tour id: {}",tourId);
                             return new TourNotPresentInDBException(
                                     "Tour not presented in Database. Tour id: " + tourId);
                         }
@@ -117,7 +115,7 @@ public class UserBookingServiceImpl implements UserBookingService {
     private User getUserFromRepository(String username) {
         return userRepository.findByUsernameAndRole(username, Role.ROLE_USER)
                 .orElseThrow(() -> {
-                            log.warn("User not presented in Database. Username: " + username);
+                            log.warn("User not presented in Database. Username: {}",username);
                             return new UsernameNotFoundException(
                                     "User not presented in Database. Username: " + username);
                         }
@@ -127,7 +125,7 @@ public class UserBookingServiceImpl implements UserBookingService {
     private Check getCheckFromRepositoryByIdAndStatus(Long checkId, CheckStatus tourStatus) {
         return checkRepository.findByIdAndStatusIn(checkId, Collections.singletonList(tourStatus))
                 .orElseThrow(() -> {
-                            log.warn("Check not presented in Database. Check ID: " + checkId);
+                            log.warn("Check not presented in Database. Check ID: {}",checkId);
                             return new CheckNotPresentInDBException(
                                     "Check not presented in Database. Check ID: " + checkId);
                         }
